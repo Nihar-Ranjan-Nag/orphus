@@ -1,0 +1,397 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --emerald: #0b5345;
+    --emerald-dark: #063b32;
+    --emerald-deep: #041f1a;
+
+    --gold: #c9a95d;
+    --gold-soft: #e6d4a2;
+
+    --paper: #fffefa;
+    --cream: #f7f4ec;
+
+    --ink: #0a1714;
+    --muted: #5e6d68;
+    --line: #dde3de;
+
+    --background: 48 100% 99%;
+    --foreground: 164 39% 6%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 164 39% 6%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 164 39% 6%;
+
+    --primary: 168 77% 18%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 42 58% 57%;
+    --secondary-foreground: 164 39% 6%;
+
+    --muted: 48 28% 94%;
+    --muted-foreground: 160 8% 40%;
+
+    --accent: 48 28% 94%;
+    --accent-foreground: 164 39% 6%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 140 11% 88%;
+    --input: 140 11% 88%;
+    --ring: 168 77% 18%;
+
+    --radius: 0.75rem;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  html {
+    min-height: 100%;
+    width: 100%;
+    overflow-x: hidden;
+
+    /*
+     * Use normal browser scrolling.
+     */
+    scroll-behavior: auto;
+  }
+
+  body,
+  #root {
+    min-height: 100%;
+    width: 100%;
+  }
+
+  body {
+    margin: 0;
+    min-width: 320px;
+
+    /*
+     * Do not add overflow-y here.
+     * The browser will handle vertical
+     * scrolling normally.
+     */
+    overflow-x: hidden;
+
+    background: var(--paper);
+    color: var(--ink);
+
+    font-family:
+      Inter,
+      ui-sans-serif,
+      system-ui,
+      -apple-system,
+      BlinkMacSystemFont,
+      "Segoe UI",
+      sans-serif;
+
+    font-size: 16px;
+    line-height: 1.7;
+
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    margin: 0;
+
+    color: inherit;
+
+    font-family:
+      Georgia,
+      "Times New Roman",
+      serif;
+
+    font-weight: 500;
+    letter-spacing: -0.035em;
+    line-height: 1.04;
+    text-wrap: balance;
+  }
+
+  p {
+    margin: 0;
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  button,
+  input,
+  select,
+  textarea {
+    font: inherit;
+  }
+
+  img {
+    display: block;
+    max-width: 100%;
+  }
+
+  .font-display,
+  .font-serif {
+    font-family:
+      Georgia,
+      "Times New Roman",
+      serif !important;
+  }
+
+  .font-body {
+    font-family:
+      Inter,
+      ui-sans-serif,
+      system-ui,
+      -apple-system,
+      BlinkMacSystemFont,
+      "Segoe UI",
+      sans-serif !important;
+  }
+}
+
+@layer components {
+  .section-shell {
+    @apply mx-auto w-full max-w-[1240px] px-5 md:px-10;
+  }
+
+  .section-kicker {
+    @apply text-[12px] md:text-[13px] font-extrabold uppercase tracking-[.20em] text-[#0B5345];
+  }
+
+  .section-kicker-gold {
+    @apply text-[12px] md:text-[13px] font-extrabold uppercase tracking-[.20em] text-[#C9A95D];
+  }
+
+  .section-title {
+    @apply mt-4 font-serif text-[clamp(38px,5vw,64px)] font-normal leading-[1.02] tracking-[-.04em];
+  }
+
+  .section-copy {
+    @apply mt-5 max-w-[760px] text-[16px] leading-7 text-[#5E6D68] md:text-[18px] md:leading-8;
+  }
+
+  .card-title {
+    @apply font-serif text-[28px] md:text-[30px] font-normal leading-[1.05];
+  }
+
+  .card-copy {
+    @apply mt-3 text-[16px] leading-7 text-[#5E6D68];
+  }
+
+  .micro-link {
+    @apply inline-flex items-center gap-2 text-[12px] md:text-[13px] font-bold uppercase tracking-[.08em] text-[#0B5345];
+  }
+
+  .content-safe,
+  .content-safe * {
+    opacity: 1;
+    visibility: visible;
+  }
+}
+
+.grid-texture {
+  background-image:
+    linear-gradient(
+      rgba(11, 83, 69, 0.045) 1px,
+      transparent 1px
+    ),
+    linear-gradient(
+      90deg,
+      rgba(11, 83, 69, 0.045) 1px,
+      transparent 1px
+    );
+
+  background-size: 48px 48px;
+}
+
+.grid-texture-white {
+  background-image:
+    linear-gradient(
+      rgba(11, 83, 69, 0.04) 1px,
+      transparent 1px
+    ),
+    linear-gradient(
+      90deg,
+      rgba(11, 83, 69, 0.04) 1px,
+      transparent 1px
+    );
+
+  background-size: 48px 48px;
+}
+
+.grid-texture-dark {
+  background-image:
+    linear-gradient(
+      rgba(255, 255, 255, 0.035) 1px,
+      transparent 1px
+    ),
+    linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0.035) 1px,
+      transparent 1px
+    );
+
+  background-size: 42px 42px;
+}
+
+.card-hover {
+  transition:
+    transform 0.3s ease,
+    border-color 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+.card-hover:hover {
+  transform: translateY(-4px);
+  border-color: rgba(11, 83, 69, 0.35);
+  box-shadow:
+    0 22px 55px
+    rgba(7, 40, 33, 0.09);
+}
+
+.jurisdiction-card {
+  transition:
+    transform 0.32s ease,
+    border-color 0.32s ease,
+    box-shadow 0.32s ease,
+    background-color 0.32s ease;
+}
+
+.jurisdiction-card:hover {
+  transform: translateY(-6px);
+  border-color: rgba(11, 83, 69, 0.32);
+  box-shadow:
+    0 24px 60px
+    rgba(7, 40, 33, 0.1);
+  background: #fffefb;
+}
+
+@media (max-width: 767px) {
+  body {
+    font-size: 15px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+/* Client trust: compact continuous logo rail on phones/tablets. */
+@keyframes client-logo-marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(calc(-50% - 0.375rem)); }
+}
+
+.client-logo-marquee {
+  animation: client-logo-marquee 24s linear infinite;
+  will-change: transform;
+}
+
+.client-logo-marquee:hover {
+  animation-play-state: paused;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .client-logo-marquee {
+    animation: none;
+    overflow-x: auto;
+  }
+}
+
+/* ============================================================
+   2026-09-10 client consistency pass
+   Shared interactive treatment for content cards across the site.
+   Mirrors the homepage solution cards: lift + emerald top rail.
+============================================================ */
+.site-card {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  transform: translateZ(0);
+  transition:
+    transform 360ms cubic-bezier(.2,.8,.2,1),
+    border-color 360ms ease,
+    box-shadow 360ms ease,
+    background-color 360ms ease;
+  animation: site-card-enter 620ms cubic-bezier(.2,.8,.2,1) both;
+}
+
+.site-card::before {
+  content: "";
+  position: absolute;
+  z-index: 5;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 3px;
+  pointer-events: none;
+  background: linear-gradient(90deg, #0B5345 0%, #0B5345 72%, #C9A95D 100%);
+  transition: width 420ms cubic-bezier(.2,.8,.2,1);
+}
+
+.site-card:hover,
+.site-card:focus-within {
+  transform: translateY(-6px);
+  border-color: rgba(11, 83, 69, .35) !important;
+  box-shadow: 0 24px 58px rgba(7, 40, 33, .11) !important;
+}
+
+.site-card:hover::before,
+.site-card:focus-within::before {
+  width: 100%;
+}
+
+.site-card:active {
+  transform: translateY(-2px) scale(.995);
+}
+
+@keyframes site-card-enter {
+  from { opacity: .88; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Readability: child/detail pages should feel as legible as the homepage. */
+main {
+  font-size: 17px;
+}
+
+@media (min-width: 768px) {
+  main { font-size: 18px; }
+}
+
+@media (max-width: 767px) {
+  body { font-size: 16px; }
+  .section-shell { padding-left: 1.25rem; padding-right: 1.25rem; }
+  .section-copy { font-size: 16px; line-height: 1.75; }
+  .card-copy { font-size: 15px; line-height: 1.7; }
+}
+
+@media (hover: none) {
+  .site-card::before {
+    width: 52px;
+    opacity: .45;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .site-card { animation: none; }
+}

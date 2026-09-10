@@ -1,0 +1,16 @@
+ORPHEUS FINANCIAL - CLIENT FEEDBACK UPDATED BUILD
+
+Run locally:
+1. npm install
+2. npm run dev
+
+Production check:
+3. npm run build
+
+Important configuration:
+- Logo: public/brands/orpheus-client-logo.png
+- Phone/email: src/data/contact.ts
+- Enquiry assistant: src/components/interactive/AdvisoryChat.tsx
+- Route scroll/top handling: src/App.tsx
+
+Implemented client fixes are documented in CLIENT_FEEDBACK_FIXES.md.

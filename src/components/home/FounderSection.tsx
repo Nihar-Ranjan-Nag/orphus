@@ -1,0 +1,137 @@
+import { useEffect, useRef } from "react";
+import { gsap, setupGsap } from "@/lib/gsapSetup";
+import { OButton } from "@/components/ui/OButton";
+import { Linkedin, Award, Globe, Users } from "lucide-react";
+import { FloatingParticles } from "@/components/ui/FloatingParticles";
+
+const FOUNDER_IMAGE = "/brands/yadav.png";
+
+const highlights = [
+  { icon: <Globe size={14} />,  label: "18 Markets" },
+  { icon: <Users size={14} />,  label: "60+ Institutions" },
+  { icon: <Award size={14} />,  label: "Dubai-based" },
+];
+
+export function FounderSection() {
+  const leftRef  = useRef<HTMLDivElement>(null);
+  const rightRef = useRef<HTMLDivElement>(null);
+  const quoteRef = useRef<HTMLDivElement>(null);
+  const imgRef   = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    setupGsap();
+
+    gsap.fromTo(leftRef.current,
+      { x: -60, opacity: 0 },
+      { x: 0, opacity: 1, duration: 1.1, ease: "power3.out",
+        scrollTrigger: { trigger: leftRef.current, start: "top 80%", once: true } });
+    gsap.fromTo(rightRef.current,
+      { x: 60, opacity: 0 },
+      { x: 0, opacity: 1, duration: 1.1, ease: "power3.out",
+        scrollTrigger: { trigger: rightRef.current, start: "top 80%", once: true } });
+    gsap.to(quoteRef.current, { y: -14, duration: 5, repeat: -1, yoyo: true, ease: "sine.inOut", delay: 1.5 });
+
+    if (imgRef.current)
+      gsap.to(imgRef.current, {
+        yPercent: -10, ease: "none",
+        scrollTrigger: { trigger: imgRef.current, start: "top bottom", end: "bottom top", scrub: true },
+      });
+  }, []);
+
+  return (
+    <section className="bg-[#F7F4EC] py-28 md:py-36 relative overflow-hidden">
+      <FloatingParticles count={45} color="rgba(11,93,77,0.4)" ringColor="rgba(11,93,77,0.26)" />
+      <div className="absolute inset-0 opacity-[0.04]" style={{
+        backgroundImage: "linear-gradient(rgba(0,0,0,1) 1px, transparent 1px), linear-gradient(90deg, rgba(0,0,0,1) 1px, transparent 1px)",
+        backgroundSize: "48px 48px", pointerEvents: "none",
+      }} />
+
+      <div className="relative mx-auto grid max-w-[1280px] gap-16 px-6 md:px-16 lg:grid-cols-2 lg:gap-20 items-center">
+
+        {/* LEFT — image */}
+        <div ref={leftRef} className="relative">
+          <div className="absolute -top-3 -left-3 right-3 bottom-3 border-2 border-gold/40 rounded-3xl" />
+
+          <div ref={imgRef} className="relative aspect-[0.85] rounded-3xl overflow-hidden"
+            style={{ background: "linear-gradient(135deg, #0B5D4D15, #11111108)" }}>
+            <img
+              src={FOUNDER_IMAGE}
+              alt="Rachit Yadav — Founder & CEO"
+              loading="lazy"
+              decoding="async"
+              className="h-full w-full object-cover object-[center_22%]"
+            />
+            <div className="absolute inset-x-0 bottom-0 h-1/3"
+              style={{ background: "linear-gradient(to top, rgba(8,8,8,0.45), transparent)" }} />
+          </div>
+
+          {/* Floating quote card */}
+          <div ref={quoteRef}
+            className="absolute -bottom-6 -right-2 md:-right-8 max-w-[270px] rounded-2xl p-6"
+            style={{
+              background: "#15231F",
+              boxShadow: "0 28px 64px rgba(29,28,28,0.12), inset 0 1px 0 rgba(255,255,255,0.08)",
+              border: "1px solid rgba(11,93,77,0.22)",
+            }}
+          >
+            <span className="font-serif text-[40px] leading-none text-gold/25">"</span>
+            <p className="font-serif italic text-white text-[17px] leading-snug -mt-2">
+              We don't just advise — we execute.
+            </p>
+            <p className="mt-3 font-display font-semibold text-[12px] uppercase tracking-[2px] text-gold">
+              Rachit Yadav, Founder & CEO
+            </p>
+          </div>
+        </div>
+
+        {/* RIGHT */}
+        <div ref={rightRef}>
+          <p className="font-display text-[13px] font-semibold uppercase tracking-[3px] text-gold">Founder</p>
+          <h2 className="mt-4 font-display font-extrabold leading-[1.0] text-[#15231F]"
+            style={{ fontSize: "clamp(32px, 4vw, 56px)", letterSpacing: "-0.03em" }}>
+            Rachit Yadav
+          </h2>
+
+          {/* Highlights row */}
+          <div className="mt-6 flex flex-wrap gap-3">
+            {highlights.map((h) => (
+              <div key={h.label}
+                className="flex items-center gap-2 rounded-full border border-gold/25 bg-gold/[0.07] px-4 py-1.5">
+                <span className="text-gold">{h.icon}</span>
+                <span className="font-display font-semibold text-[13px] uppercase tracking-[1.5px] text-[#15231F]">{h.label}</span>
+              </div>
+            ))}
+          </div>
+
+          <div className="type-prose-body-muted mt-8 max-w-lg space-y-5">
+            <p>
+              Rachit Yadav founded Orpheus Financial with a single belief: financial institutions and expanding businesses deserve a partner who <em className="text-[#15231F] font-semibold">actually executes</em> — not just advises.
+            </p>
+            <p>
+              With a background spanning corporate finance, offshore structuring, and banking across emerging markets, Rachit has helped 60+ financial institutions and cross-border corporations set up global entities, secure tier-1 banking, and raise institutional capital.
+            </p>
+            <p>
+              Based in Dubai, his team has built a reputation for structuring complex entities, investment funds, and trade finance operations across commodities, fintech, and digital assets.
+            </p>
+          </div>
+
+          <div className="mt-7 flex flex-wrap gap-2">
+            {["Offshore Structuring", "Banking Strategy", "Capital Raising", "Cross-border Tax", "Compliance"].map((t) => (
+              <span key={t} className="rounded-full border border-gold/25 bg-gold/[0.07] px-4 py-1.5 font-display font-semibold text-[12px] uppercase tracking-[1.5px] text-gold-dark">
+                {t}
+              </span>
+            ))}
+          </div>
+
+          <div className="mt-10 flex flex-wrap gap-4">
+            <a href="https://www.linkedin.com/in/rachit-yadav-96a3951b9" target="_blank" rel="noopener noreferrer">
+              <OButton variant="gold">
+                <Linkedin size={14} /> Connect on LinkedIn
+              </OButton>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}

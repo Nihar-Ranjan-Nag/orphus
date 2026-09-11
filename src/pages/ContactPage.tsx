@@ -145,6 +145,8 @@ export default function ContactPage() {
             ================================================== */}
             <div
               className="
+                order-2
+                lg:order-1
                 relative
                 overflow-hidden
 
@@ -404,6 +406,8 @@ export default function ContactPage() {
             ================================================== */}
             <div
               className="
+                order-1
+                lg:order-2
                 overflow-hidden
 
                 rounded-[22px]

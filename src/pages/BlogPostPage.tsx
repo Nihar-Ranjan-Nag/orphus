@@ -56,6 +56,12 @@ export default function BlogPostPage() {
   const progressRef =
     useRef<HTMLDivElement>(null);
 
+  const articleBodyRef =
+    useRef<HTMLElement>(null);
+
+  const sidebarProgressRef =
+    useRef<HTMLSpanElement>(null);
+
   const [activeIdx, setActiveIdx] =
     useState(0);
 
@@ -63,7 +69,7 @@ export default function BlogPostPage() {
     useRef<(HTMLElement | null)[]>([]);
 
   /* =====================================================
-      READING PROGRESS
+      TOP READING PROGRESS
   ===================================================== */
 
   useEffect(() => {
@@ -98,6 +104,46 @@ export default function BlogPostPage() {
   }, [slug]);
 
   /* =====================================================
+      SIDEBAR VERTICAL PROGRESS
+  ===================================================== */
+
+  useEffect(() => {
+    setupGsap();
+
+    if (
+      !sidebarProgressRef.current ||
+      !articleBodyRef.current
+    ) {
+      return;
+    }
+
+    gsap.set(sidebarProgressRef.current, {
+      scaleY: 0,
+      transformOrigin: "top",
+    });
+
+    const tween = gsap.to(
+      sidebarProgressRef.current,
+      {
+        scaleY: 1,
+        ease: "none",
+
+        scrollTrigger: {
+          trigger: articleBodyRef.current,
+          start: "top 38%",
+          end: "bottom 72%",
+          scrub: 0.45,
+        },
+      }
+    );
+
+    return () => {
+      tween.scrollTrigger?.kill();
+      tween.kill();
+    };
+  }, [slug, post]);
+
+  /* =====================================================
       ACTIVE ARTICLE SECTION
   ===================================================== */
 
@@ -113,8 +159,8 @@ export default function BlogPostPage() {
         const trigger =
           ScrollTrigger.create({
             trigger: element,
-            start: "top 30%",
-            end: "bottom 30%",
+            start: "top 32%",
+            end: "bottom 32%",
 
             onToggle: (self) => {
               if (self.isActive) {
@@ -143,9 +189,13 @@ export default function BlogPostPage() {
   return (
     <main
       className="
+        w-full
+        overflow-x-hidden
         bg-[#FFFEFA]
-        pt-[76px]
+        pt-[72px]
         text-[#0A1714]
+
+        lg:pt-[76px]
       "
     >
       {/* =====================================================
@@ -158,11 +208,15 @@ export default function BlogPostPage() {
           fixed
           left-0
           right-0
-          top-[76px]
+          top-[72px]
           z-[999]
+
           h-[3px]
+
           origin-left
           bg-[#D8B867]
+
+          lg:top-[76px]
         "
       />
 
@@ -174,63 +228,128 @@ export default function BlogPostPage() {
         className="
           relative
           overflow-hidden
+
           border-b
           border-[#DDE2DD]
-          bg-[#F7F4EC]
-          py-14
 
-          md:py-16
+          bg-[#F7F4EC]
+
+          pt-3
+          pb-7
+
+          sm:pt-4
+          sm:pb-8
+
+          md:pt-4
+          md:pb-9
+
+          lg:pt-5
+          lg:pb-10
+
+          xl:pt-5
+          xl:pb-11
         "
       >
-        <div className="absolute inset-0 grid-texture opacity-40" />
+        <div
+          className="
+            absolute
+            inset-0
+
+            grid-texture
+            opacity-40
+          "
+        />
 
         <div
           className="
             section-shell
+
             relative
+
+            w-full
+            min-w-0
           "
         >
+          {/* BACK LINK */}
+
           <Link
             to="/blog"
             className="
               inline-flex
               items-center
               gap-2
-              text-[11px]
+
+              text-[10px]
               font-bold
               uppercase
               tracking-[.14em]
+
               text-[#0B5345]
+
               transition
+
               hover:text-[#A7802D]
+
+              sm:text-[11px]
             "
           >
             <ArrowLeft size={13} />
+
             Back to Insights
           </Link>
 
+          {/* =================================================
+              HERO GRID
+          ================================================= */}
+
           <div
             className="
-              mt-8
-              grid
-              gap-10
+              mt-4
 
-              lg:grid-cols-[1.05fr_.95fr]
+              grid
+              min-w-0
+              grid-cols-1
+
+              gap-7
+
+              sm:mt-5
+              sm:gap-8
+
+              lg:mt-6
+              lg:grid-cols-[minmax(0,0.92fr)_minmax(430px,1.08fr)]
               lg:items-center
+              lg:gap-12
+
+              xl:grid-cols-[minmax(0,0.9fr)_minmax(520px,1.1fr)]
+              xl:gap-14
             "
           >
-            {/* CONTENT */}
-            <div>
+            {/* =================================================
+                HERO CONTENT
+            ================================================= */}
+
+            <div className="min-w-0">
+
+              {/* META */}
+
               <div
                 className="
                   flex
+                  min-w-0
                   flex-wrap
                   items-center
-                  gap-2
-                  text-[11px]
+
+                  gap-x-2
+                  gap-y-1.5
+
+                  text-[9px]
                   font-bold
                   uppercase
-                  tracking-[.14em]
+                  tracking-[.13em]
+
+                  sm:text-[10px]
+
+                  lg:text-[11px]
                 "
               >
                 <span className="text-[#0B5345]">
@@ -256,76 +375,134 @@ export default function BlogPostPage() {
                         flex
                         items-center
                         gap-1.5
+
                         text-[#788580]
                       "
                     >
                       <Clock3 size={11} />
+
                       {post.readTime}
                     </span>
                   </>
                 )}
               </div>
 
+              {/* TITLE */}
+
               <h1
                 className="
-                  mt-5
-                  max-w-[800px]
+                  mt-4
+
+                  w-full
+                  min-w-0
+                  max-w-[760px]
+
+                  break-words
+
                   font-serif
-                  text-[clamp(42px,5.6vw,72px)]
+
+                  text-[34px]
                   font-normal
-                  leading-[.99]
-                  tracking-[-.045em]
+
+                  leading-[1.01]
+
+                  tracking-[-.038em]
+
+                  sm:text-[42px]
+
+                  md:text-[48px]
+
+                  lg:text-[52px]
+                  lg:leading-[.99]
+
+                  xl:text-[60px]
                 "
               >
                 {post.title}
               </h1>
 
+              {/* EXCERPT */}
+
               <p
                 className="
-                  mt-6
-                  max-w-[670px]
-                  text-[18px]
-                  leading-8
+                  mt-5
+
+                  w-full
+                  min-w-0
+                  max-w-[650px]
+
+                  break-words
+
+                  text-[15px]
+
+                  leading-[1.7]
+
                   text-[#5F6D68]
+
+                  sm:text-[16px]
+                  sm:leading-7
+
+                  lg:text-[17px]
                 "
               >
                 {post.excerpt}
               </p>
 
               {/* AUTHOR */}
+
               <div
                 className="
-                  mt-8
+                  mt-5
+
                   flex
                   items-center
                   gap-3
+
                   border-t
                   border-[#D9DED9]
-                  pt-6
+
+                  pt-4
+
+                  sm:mt-6
+                  sm:pt-5
                 "
               >
                 <div
                   className="
                     flex
-                    h-10
-                    w-10
+
+                    h-9
+                    w-9
+                    shrink-0
+
                     items-center
                     justify-center
+
                     rounded-full
+
                     bg-[#0B5345]
-                    text-[12px]
+
+                    text-[11px]
                     font-bold
                     text-white
+
+                    sm:h-10
+                    sm:w-10
+                    sm:text-[12px]
                   "
                 >
                   {post.author.initials}
                 </div>
 
-                <div>
+                <div className="min-w-0">
                   <p
                     className="
-                      text-[15px]
+                      truncate
+
+                      text-[14px]
                       font-semibold
+
+                      sm:text-[15px]
                     "
                   >
                     {post.author.name}
@@ -334,10 +511,14 @@ export default function BlogPostPage() {
                   <p
                     className="
                       mt-0.5
-                      text-[11px]
+
+                      text-[9px]
                       uppercase
-                      tracking-[.13em]
+                      tracking-[.12em]
+
                       text-[#7B8883]
+
+                      sm:text-[10px]
                     "
                   >
                     {post.author.role}
@@ -346,18 +527,36 @@ export default function BlogPostPage() {
               </div>
             </div>
 
-            {/* ARTICLE IMAGE */}
+            {/* =================================================
+                HERO IMAGE
+            ================================================= */}
+
             <div
               className="
                 relative
-                h-[340px]
+
+                w-full
+                min-w-0
+
                 overflow-hidden
-                rounded-[24px]
+
+                rounded-[18px]
+
                 border
                 border-[#D9DED9]
+
                 bg-[#E5E8E3]
 
-                md:h-[390px]
+                aspect-[16/10]
+
+                sm:aspect-[16/9]
+                sm:rounded-[22px]
+
+                lg:h-[430px]
+                lg:aspect-auto
+                lg:rounded-[24px]
+
+                xl:h-[470px]
               "
             >
               <SmartImage
@@ -366,7 +565,9 @@ export default function BlogPostPage() {
                 className="
                   h-full
                   w-full
+
                   object-cover
+                  object-center
                 "
               />
 
@@ -374,10 +575,11 @@ export default function BlogPostPage() {
                 className="
                   absolute
                   inset-0
+
                   bg-[linear-gradient(
                     180deg,
-                    transparent_58%,
-                    rgba(4,24,19,.68)_100%
+                    transparent_52%,
+                    rgba(4,24,19,.70)_100%
                   )]
                 "
               />
@@ -385,17 +587,33 @@ export default function BlogPostPage() {
               <div
                 className="
                   absolute
-                  bottom-5
-                  left-5
+
+                  bottom-3
+                  left-3
+
+                  max-w-[calc(100%-24px)]
+
                   rounded-full
+
                   bg-[#07251E]/90
+
                   px-3
-                  py-2
-                  text-[10px]
+                  py-1.5
+
+                  text-[8px]
                   font-bold
                   uppercase
-                  tracking-[.14em]
+                  tracking-[.12em]
+
                   text-[#E4C77D]
+
+                  sm:bottom-4
+                  sm:left-4
+                  sm:text-[9px]
+
+                  lg:bottom-5
+                  lg:left-5
+                  lg:text-[10px]
                 "
               >
                 Orpheus Financial Insight
@@ -409,29 +627,129 @@ export default function BlogPostPage() {
           ARTICLE BODY
       ===================================================== */}
 
-      <section className="bg-white py-16 md:py-20">
+      <section
+        ref={articleBodyRef}
+        className="
+          w-full
+          overflow-hidden
+
+          bg-white
+
+          py-9
+
+          sm:py-12
+
+          md:py-16
+
+          lg:py-20
+        "
+      >
         <div
           className="
             section-shell
-            grid
-            gap-12
 
-            lg:grid-cols-[240px_minmax(0,760px)]
+            grid
+
+            w-full
+            min-w-0
+
+            grid-cols-1
+
+            gap-8
+
+            lg:grid-cols-[300px_minmax(0,760px)]
             lg:justify-center
+            lg:gap-14
           "
         >
           {/* =================================================
-              TABLE OF CONTENTS
+              DESKTOP TABLE OF CONTENTS
           ================================================= */}
 
-          <aside className="hidden lg:block">
-            <div className="sticky top-[120px]">
+          <aside
+            className="
+              relative
+              hidden
+
+              lg:block
+            "
+          >
+            {/* FULL HEIGHT RAIL */}
+
+            <span
+              aria-hidden="true"
+              className="
+                pointer-events-none
+
+                absolute
+
+                bottom-0
+                right-0
+                top-0
+
+                w-px
+
+                bg-[#E2E6E2]
+              "
+            />
+
+            {/* ANIMATED PROGRESS LINE */}
+
+            <span
+              ref={sidebarProgressRef}
+              aria-hidden="true"
+              className="
+                pointer-events-none
+
+                absolute
+
+                right-0
+                top-0
+
+                z-10
+
+                h-full
+                w-[2px]
+
+                origin-top
+
+                bg-[linear-gradient(
+                  180deg,
+                  #D8B867_0%,
+                  #0B5345_45%,
+                  #69B7A1_100%
+                )]
+              "
+            />
+
+            <div
+              className="
+                sticky
+                top-[118px]
+
+                mr-7
+
+                overflow-hidden
+
+                rounded-[22px]
+
+                border
+                border-[#DDE2DD]
+
+                bg-[#FBFAF6]
+
+                p-6
+
+                shadow-[0_12px_35px_rgba(7,40,33,.035)]
+              "
+            >
               <p
                 className="
-                  text-[11px]
+                  text-[12px]
                   font-extrabold
                   uppercase
                   tracking-[.17em]
+
                   text-[#A7802D]
                 "
               >
@@ -441,7 +759,9 @@ export default function BlogPostPage() {
               <ul
                 className="
                   mt-5
+
                   space-y-1
+
                   border-l
                   border-[#DDE2DD]
                 "
@@ -453,20 +773,36 @@ export default function BlogPostPage() {
                         href={`#section-${index}`}
                         className={`
                           block
-                          -ml-px
-                          border-l-2
-                          py-2.5
-                          pl-4
 
-                          text-[13px]
-                          leading-5
+                          -ml-px
+
+                          border-l-2
+
+                          py-3
+                          pl-4
+                          pr-2
+
+                          text-[15px]
+
+                          leading-[1.45]
 
                           transition-all
+                          duration-300
 
                           ${
                             activeIdx === index
-                              ? "border-[#0B5345] font-semibold text-[#0B5345]"
-                              : "border-transparent text-[#6F7C77] hover:text-[#0B5345]"
+                              ? `
+                                  border-[#0B5345]
+                                  font-semibold
+                                  text-[#0B5345]
+                                `
+                              : `
+                                  border-transparent
+                                  text-[#66736E]
+
+                                  hover:border-[#C6D4CF]
+                                  hover:text-[#0B5345]
+                                `
                           }
                         `}
                       >
@@ -477,62 +813,78 @@ export default function BlogPostPage() {
                 )}
               </ul>
 
-              {/* ARTICLE SHARE / CTA */}
+              {/* CTA */}
+
               <div
                 className="
                   group/card
                   relative
-                  mt-8
+
+                  mt-7
+
                   overflow-hidden
+
                   rounded-[18px]
+
                   border
                   border-[#DDE2DD]
+
                   bg-[#F8F6F0]
+
                   p-5
 
                   transition-all
                   duration-300
 
-                  md:hover:-translate-y-1
-                  md:hover:border-[#0B5345]/25
-                  md:hover:shadow-[0_14px_32px_rgba(7,40,33,.07)]
+                  hover:-translate-y-1
+                  hover:border-[#0B5345]/25
+                  hover:shadow-[0_14px_32px_rgba(7,40,33,.07)]
                 "
               >
                 <span
                   aria-hidden="true"
                   className="
                     pointer-events-none
+
                     absolute
+
                     left-0
                     top-0
 
-                    hidden
                     h-[3px]
                     w-full
 
                     origin-left
                     scale-x-0
 
-                    bg-[linear-gradient(90deg,#0B5345_0%,#69B7A1_60%,#D8B867_100%)]
+                    bg-[linear-gradient(
+                      90deg,
+                      #0B5345_0%,
+                      #69B7A1_60%,
+                      #D8B867_100%
+                    )]
 
                     transition-transform
                     duration-300
 
-                    md:block
-                    md:group-hover/card:scale-x-100
+                    group-hover/card:scale-x-100
                   "
                 />
+
                 <Mail
-                  size={17}
+                  size={18}
                   className="text-[#0B5345]"
                 />
 
                 <p
                   className="
                     mt-4
+
                     font-serif
-                    text-[18px]
-                    leading-[1.12]
+
+                    text-[20px]
+
+                    leading-[1.18]
                   "
                 >
                   Need advice on this topic?
@@ -540,37 +892,217 @@ export default function BlogPostPage() {
 
                 <Link
                   to="/contact"
-                  className="micro-link mt-4"
+                  className="
+                    mt-5
+
+                    inline-flex
+                    items-center
+                    gap-2
+
+                    text-[11px]
+                    font-bold
+                    uppercase
+                    tracking-[.12em]
+
+                    text-[#0B5345]
+                  "
                 >
                   Speak with Orpheus
-                  <ArrowRight size={11} />
+
+                  <ArrowRight size={12} />
                 </Link>
               </div>
             </div>
           </aside>
 
           {/* =================================================
-              BODY
+              ARTICLE CONTENT
           ================================================= */}
 
-          <article className="w-full max-w-[760px]">
-            {/* ARTICLE INTRO */}
+          <article
+            className="
+              w-full
+              min-w-0
+              max-w-[760px]
+
+              overflow-hidden
+            "
+          >
+            {/* =================================================
+                MOBILE ARTICLE NAVIGATION
+            ================================================= */}
+
+            <div
+              className="
+                mb-8
+
+                w-full
+                min-w-0
+
+                rounded-[18px]
+
+                border
+                border-[#DDE2DD]
+
+                bg-[#F8F6F0]
+
+                p-4
+
+                lg:hidden
+              "
+            >
+              <div
+                className="
+                  flex
+                  items-center
+                  justify-between
+                  gap-4
+                "
+              >
+                <p
+                  className="
+                    text-[10px]
+                    font-extrabold
+                    uppercase
+                    tracking-[.16em]
+
+                    text-[#A7802D]
+                  "
+                >
+                  In this article
+                </p>
+
+                <span
+                  className="
+                    shrink-0
+
+                    text-[10px]
+                    font-bold
+
+                    text-[#0B5345]
+                  "
+                >
+                  {String(activeIdx + 1).padStart(2, "0")}
+                  /
+                  {String(post.body.length).padStart(2, "0")}
+                </span>
+              </div>
+
+              <div
+                className="
+                  mt-4
+
+                  flex
+
+                  w-full
+                  min-w-0
+
+                  gap-2
+
+                  overflow-x-auto
+                  overscroll-x-contain
+
+                  pb-1
+
+                  [scrollbar-width:none]
+
+                  [&::-webkit-scrollbar]:hidden
+                "
+              >
+                {post.body.map(
+                  (section, index) => (
+                    <a
+                      key={index}
+                      href={`#section-${index}`}
+                      className={`
+                        flex
+                        shrink-0
+                        items-center
+                        gap-2
+
+                        rounded-full
+
+                        border
+
+                        px-4
+                        py-2.5
+
+                        text-[12px]
+                        font-semibold
+
+                        leading-none
+
+                        transition-all
+
+                        ${
+                          activeIdx === index
+                            ? `
+                                border-[#0B5345]
+                                bg-[#0B5345]
+                                text-white
+                              `
+                            : `
+                                border-[#D7DDD8]
+                                bg-white
+                                text-[#586660]
+                              `
+                        }
+                      `}
+                    >
+                      <span
+                        className={`
+                          text-[10px]
+                          font-bold
+
+                          ${
+                            activeIdx === index
+                              ? "text-[#E4C77D]"
+                              : "text-[#A7802D]"
+                          }
+                        `}
+                      >
+                        {String(index + 1).padStart(2, "0")}
+                      </span>
+
+                      {section.heading}
+                    </a>
+                  )
+                )}
+              </div>
+            </div>
+
+            {/* =================================================
+                ARTICLE INTRO
+            ================================================= */}
+
             <div
               className="
                 group/card
                 relative
-                mb-12
+
+                mb-9
+
                 overflow-hidden
-                rounded-[22px]
+
+                rounded-[18px]
+
                 border
                 border-[#DCE2DC]
+
                 bg-[#F8F6F0]
-                p-6
+
+                p-5
 
                 transition-all
                 duration-300
 
+                sm:mb-10
+                sm:rounded-[22px]
+                sm:p-6
+
+                md:mb-12
                 md:p-7
+
                 md:hover:-translate-y-1
                 md:hover:border-[#0B5345]/25
                 md:hover:shadow-[0_14px_32px_rgba(7,40,33,.06)]
@@ -580,18 +1112,26 @@ export default function BlogPostPage() {
                 aria-hidden="true"
                 className="
                   pointer-events-none
+
                   absolute
+
                   left-0
                   top-0
 
                   hidden
+
                   h-[3px]
                   w-full
 
                   origin-left
                   scale-x-0
 
-                  bg-[linear-gradient(90deg,#0B5345_0%,#69B7A1_60%,#D8B867_100%)]
+                  bg-[linear-gradient(
+                    90deg,
+                    #0B5345_0%,
+                    #69B7A1_60%,
+                    #D8B867_100%
+                  )]
 
                   transition-transform
                   duration-300
@@ -600,23 +1140,39 @@ export default function BlogPostPage() {
                   md:group-hover/card:scale-x-100
                 "
               />
-              <div className="flex gap-4">
+
+              <div className="flex gap-3 sm:gap-4">
                 <Quote
-                  size={22}
+                  size={21}
                   className="
                     mt-1
                     shrink-0
+
                     text-[#D8B867]
+
+                    sm:h-[22px]
+                    sm:w-[22px]
                   "
                 />
 
                 <p
                   className="
+                    min-w-0
+
+                    break-words
+
                     font-serif
-                    text-[21px]
+
+                    text-[18px]
                     font-normal
-                    leading-[1.35]
+
+                    leading-[1.4]
+
                     text-[#24342F]
+
+                    sm:text-[20px]
+
+                    md:text-[21px]
                   "
                 >
                   Good structuring starts with the commercial objective,
@@ -624,6 +1180,10 @@ export default function BlogPostPage() {
                 </p>
               </div>
             </div>
+
+            {/* =================================================
+                ARTICLE SECTIONS
+            ================================================= */}
 
             {post.body.map(
               (section, index) => (
@@ -635,53 +1195,105 @@ export default function BlogPostPage() {
                       element;
                   }}
                   className="
-                    scroll-mt-[120px]
-                    mb-14
+                    mb-10
+
+                    w-full
+                    min-w-0
+
+                    scroll-mt-[105px]
+
+                    sm:mb-12
+
+                    md:mb-14
+                    md:scroll-mt-[120px]
                   "
                 >
                   {/* SECTION NUMBER */}
+
                   <p
                     className="
-                      text-[11px]
+                      text-[10px]
                       font-bold
                       uppercase
                       tracking-[.16em]
+
                       text-[#A7802D]
+
+                      sm:text-[11px]
                     "
                   >
                     {String(index + 1).padStart(2, "0")}
                   </p>
 
+                  {/* SECTION HEADING */}
+
                   <h2
                     className="
                       mt-3
+
+                      w-full
+                      min-w-0
                       max-w-[690px]
+
+                      break-words
+
                       font-serif
-                      text-[clamp(30px,3.5vw,42px)]
+
+                      text-[29px]
                       font-normal
-                      leading-[1.05]
-                      tracking-[-.03em]
+
+                      leading-[1.08]
+
+                      tracking-[-.025em]
+
+                      sm:text-[32px]
+
+                      md:text-[36px]
+
+                      lg:text-[40px]
                     "
                   >
                     {section.heading}
                   </h2>
 
+                  {/* PARAGRAPHS */}
+
                   <div
                     className="
-                      mt-6
-                      space-y-5
+                      mt-5
+
+                      w-full
+                      min-w-0
+
+                      space-y-4
+
+                      sm:mt-6
+                      sm:space-y-5
                     "
                   >
                     {section.paragraphs.map(
-                      (paragraph, paragraphIndex) => (
+                      (
+                        paragraph,
+                        paragraphIndex
+                      ) => (
                         <p
                           key={paragraphIndex}
                           className="
-                            text-[17px]
-                            leading-[1.85]
+                            w-full
+                            min-w-0
+
+                            break-words
+
+                            text-[16px]
+
+                            leading-[1.8]
+
                             text-[#4F5F59]
 
+                            sm:text-[17px]
+
                             md:text-[18px]
+                            md:leading-[1.85]
                           "
                         >
                           {paragraph}
@@ -690,14 +1302,22 @@ export default function BlogPostPage() {
                     )}
                   </div>
 
-                  {/* SMALL DIVIDER */}
+                  {/* DIVIDER */}
+
                   {index <
                     post.body.length - 1 && (
                     <div
                       className="
-                        mt-12
+                        mt-9
+
                         h-px
+                        w-full
+
                         bg-[#E2E6E2]
+
+                        sm:mt-10
+
+                        md:mt-12
                       "
                     />
                   )}
@@ -705,14 +1325,28 @@ export default function BlogPostPage() {
               )
             )}
 
-            {/* AUTHOR END CARD */}
+            {/* =================================================
+                AUTHOR END CARD
+            ================================================= */}
+
             <div
               className="
-                mt-16
-                rounded-[22px]
+                mt-12
+
+                rounded-[18px]
+
                 bg-[#07251E]
-                p-7
+
+                p-5
+
                 text-white
+
+                sm:mt-14
+                sm:rounded-[22px]
+                sm:p-6
+
+                md:mt-16
+                md:p-7
               "
             >
               <p className="section-kicker-gold">
@@ -722,6 +1356,7 @@ export default function BlogPostPage() {
               <div
                 className="
                   mt-5
+
                   flex
                   items-start
                   gap-4
@@ -730,26 +1365,40 @@ export default function BlogPostPage() {
                 <div
                   className="
                     flex
-                    h-11
-                    w-11
+
+                    h-10
+                    w-10
                     shrink-0
+
                     items-center
                     justify-center
+
                     rounded-full
+
                     bg-[#0B5345]
-                    text-[13px]
+
+                    text-[12px]
                     font-bold
+
+                    sm:h-11
+                    sm:w-11
+                    sm:text-[13px]
                   "
                 >
                   {post.author.initials}
                 </div>
 
-                <div>
+                <div className="min-w-0">
                   <p
                     className="
+                      break-words
+
                       font-serif
-                      text-[23px]
+
+                      text-[21px]
                       font-normal
+
+                      sm:text-[23px]
                     "
                   >
                     {post.author.name}
@@ -758,10 +1407,14 @@ export default function BlogPostPage() {
                   <p
                     className="
                       mt-1
-                      text-[12px]
+
+                      text-[10px]
                       uppercase
                       tracking-[.12em]
+
                       text-white/50
+
+                      sm:text-[12px]
                     "
                   >
                     {post.author.role}
@@ -770,10 +1423,18 @@ export default function BlogPostPage() {
                   <p
                     className="
                       mt-4
+
                       max-w-[560px]
-                      text-[15px]
+
+                      break-words
+
+                      text-[14px]
+
                       leading-6
+
                       text-white/62
+
+                      sm:text-[15px]
                     "
                   >
                     Orpheus Financial provides cross-border advisory
@@ -784,13 +1445,21 @@ export default function BlogPostPage() {
               </div>
             </div>
 
-            {/* BACK LINK */}
+            {/* =================================================
+                BACK LINK
+            ================================================= */}
+
             <div
               className="
-                mt-10
+                mt-8
+
                 border-t
                 border-[#DDE2DD]
-                pt-8
+
+                pt-7
+
+                sm:mt-10
+                sm:pt-8
               "
             >
               <Link
@@ -799,14 +1468,19 @@ export default function BlogPostPage() {
                   inline-flex
                   items-center
                   gap-2
-                  text-[12px]
+
+                  text-[11px]
                   font-bold
                   uppercase
                   tracking-[.12em]
+
                   text-[#0B5345]
+
+                  sm:text-[12px]
                 "
               >
                 <ArrowLeft size={12} />
+
                 All insights
               </Link>
             </div>
@@ -818,20 +1492,32 @@ export default function BlogPostPage() {
           RELATED CTA
       ===================================================== */}
 
-      <section className="bg-[#F7F4EC] py-14">
+      <section
+        className="
+          bg-[#F7F4EC]
+
+          py-10
+
+          sm:py-12
+
+          md:py-14
+        "
+      >
         <div
           className="
             section-shell
+
             flex
             flex-col
             justify-between
+
             gap-6
 
             md:flex-row
             md:items-center
           "
         >
-          <div>
+          <div className="min-w-0">
             <p className="section-kicker">
               CONTINUE THE CONVERSATION
             </p>
@@ -839,11 +1525,21 @@ export default function BlogPostPage() {
             <p
               className="
                 mt-3
+
                 max-w-[620px]
+
+                break-words
+
                 font-serif
-                text-[28px]
+
+                text-[24px]
                 font-normal
-                leading-[1.08]
+
+                leading-[1.1]
+
+                sm:text-[26px]
+
+                md:text-[28px]
               "
             >
               Need to apply this thinking to a real structure,
@@ -855,20 +1551,32 @@ export default function BlogPostPage() {
             to="/contact"
             className="
               inline-flex
+
               min-h-[44px]
+              w-fit
+              shrink-0
+
               items-center
               gap-2
+
               rounded-md
+
               bg-[#0B5345]
+
               px-5
-              text-[12px]
+
+              text-[11px]
               font-bold
               uppercase
               tracking-[.09em]
+
               text-white
+
+              sm:text-[12px]
             "
           >
             Speak With Our Team
+
             <ArrowRight size={13} />
           </Link>
         </div>

@@ -24,26 +24,54 @@ import {
 } from "@/lib/gsapSetup";
 
 import { getPostBySlug } from "@/data/blogPosts";
-import { insightCards } from "@/data/siteArchitecture";
 import { SmartImage } from "@/components/ui/SmartImage";
 import NotFound from "./NotFound";
 
 /* =========================================================
    HELPERS
+   Each blog slug maps to its own local image.
 ========================================================= */
 
-const fallbackImages = [
-  "/images/entity.jpg",
-  "/images/compliance.jpg",
-  "/images/banking.jpg",
-  "/images/credit.jpg",
-];
+const blogImages: Record<string, string> = {
+  "bvi-vs-seychelles-which-offshore-jurisdiction-is-best":
+    "/images/bvi.jpg",
+
+  "documents-required-for-business-loan-in-uae":
+    "/images/compliance.jpg",
+
+  "why-your-uae-business-bank-account-application-got-rejected":
+    "/images/bank-account-rejected.jpg",
+
+  "why-dubai-companies-choose-vision-bank":
+    "/images/vision-bank-corporate-accounts.jpg",
+
+  "why-uae-banks-freeze-accounts-and-how-to-avoid-it":
+    "/images/entity.jpg",
+
+  "open-business-account-with-mashreq-bank-dubai":
+    "/images/open-business-account-with-mashreq-bank-dubai.jpg",
+
+  "private-debt-explained":
+    "/images/private-debt-explained.jpg",
+
+  "what-is-offshore-banking-and-how-does-it-work":
+    "/images/what-is-offshore-banking-and-how-does-it-work.jpg",
+
+  "best-financial-advisors-in-dubai":
+    "/images/best-financial-advisors-in-dubai.jpg",
+
+  "offshore-business-in-seychelles":
+    "/images/offshore-business-in-seychelles.jpg",
+
+  "how-to-start-your-business-in-dubai-for-under-aed-6000":
+    "/images/how-to-start-your-business-in-dubai-for-under-aed-6000.jpg",
+
+  "how-to-buy-a-home-in-dubai-or-abu-dhabi":
+    "/images/buy-home-dubai-abu-dhabi.jpg",
+};
 
 function getArticleImage(slug: string) {
-  return (
-    insightCards.find((item) => item.slug === slug)?.image ??
-    fallbackImages[0]
-  );
+  return blogImages[slug] ?? "/images/entity.jpg";
 }
 
 export default function BlogPostPage() {
@@ -79,7 +107,7 @@ export default function BlogPostPage() {
 
     gsap.set(progressRef.current, {
       scaleX: 0,
-      transformOrigin: "left",
+      transformOrigin: "left center",
     });
 
     const tween = gsap.to(
@@ -89,13 +117,16 @@ export default function BlogPostPage() {
         ease: "none",
 
         scrollTrigger: {
-          trigger: document.body,
+          trigger: document.documentElement,
           start: "top top",
           end: "bottom bottom",
-          scrub: 0.3,
+          scrub: 0.25,
+          invalidateOnRefresh: true,
         },
       }
     );
+
+    ScrollTrigger.refresh();
 
     return () => {
       tween.scrollTrigger?.kill();
@@ -119,7 +150,7 @@ export default function BlogPostPage() {
 
     gsap.set(sidebarProgressRef.current, {
       scaleY: 0,
-      transformOrigin: "top",
+      transformOrigin: "top center",
     });
 
     const tween = gsap.to(
@@ -130,9 +161,10 @@ export default function BlogPostPage() {
 
         scrollTrigger: {
           trigger: articleBodyRef.current,
-          start: "top 38%",
-          end: "bottom 72%",
-          scrub: 0.45,
+          start: "top 40%",
+          end: "bottom 70%",
+          scrub: 0.3,
+          invalidateOnRefresh: true,
         },
       }
     );
@@ -203,7 +235,6 @@ export default function BlogPostPage() {
       ===================================================== */}
 
       <div
-        ref={progressRef}
         className="
           fixed
           left-0
@@ -211,14 +242,51 @@ export default function BlogPostPage() {
           top-[72px]
           z-[999]
 
-          h-[3px]
+          h-[4px]
+          overflow-visible
 
-          origin-left
-          bg-[#D8B867]
+          bg-[#E8E3D7]/70
 
           lg:top-[76px]
         "
-      />
+      >
+        <div
+          ref={progressRef}
+          className="
+            relative
+
+            h-full
+            w-full
+
+            origin-left
+
+            bg-[linear-gradient(90deg,#0B5345_0%,#69B7A1_45%,#D8B867_75%,#E9D59C_100%)]
+
+            shadow-[0_0_14px_rgba(216,184,103,.45)]
+          "
+        >
+          <span
+            aria-hidden="true"
+            className="
+              absolute
+              right-0
+              top-1/2
+
+              h-[10px]
+              w-[10px]
+
+              -translate-y-1/2
+              translate-x-1/2
+
+              rounded-full
+
+              bg-[#D8B867]
+
+              shadow-[0_0_0_3px_rgba(216,184,103,.18),0_0_16px_rgba(216,184,103,.75)]
+            "
+          />
+        </div>
+      </div>
 
       {/* =====================================================
           ARTICLE HERO
@@ -709,16 +777,15 @@ export default function BlogPostPage() {
                 z-10
 
                 h-full
-                w-[2px]
+                w-[3px]
 
                 origin-top
 
-                bg-[linear-gradient(
-                  180deg,
-                  #D8B867_0%,
-                  #0B5345_45%,
-                  #69B7A1_100%
-                )]
+                rounded-full
+
+                bg-[linear-gradient(180deg,#D8B867_0%,#69B7A1_45%,#0B5345_100%)]
+
+                shadow-[0_0_10px_rgba(105,183,161,.25)]
               "
             />
 

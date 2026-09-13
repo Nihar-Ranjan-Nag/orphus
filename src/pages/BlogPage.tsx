@@ -16,26 +16,53 @@ import { Link } from "react-router-dom";
 import { SmartImage } from "@/components/ui/SmartImage";
 import { announcements } from "@/data/announcements";
 import { blogPosts } from "@/data/blogPosts";
-import { insightCards } from "@/data/siteArchitecture";
 
 /* =========================================================
    BLOG IMAGE HELPERS
+   Each blog slug has its own unique local image.
+   No rotating fallbacks = no repeated images.
 ========================================================= */
 
-const fallbackImages = [
-  "/images/entity.jpg",
-  "/images/compliance.jpg",
-  "/images/bvi.jpg",
-  "/images/advisory.jpg",
-  "/images/banking.jpg",
-  "/images/credit.jpg",
-];
+const blogImages: Record<string, string> = {
+  "bvi-vs-seychelles-which-offshore-jurisdiction-is-best":
+    "/images/bvi.jpg",
 
-function getPostImage(slug: string, index = 0) {
-  return (
-    insightCards.find((item) => item.slug === slug)?.image ??
-    fallbackImages[index % fallbackImages.length]
-  );
+  "documents-required-for-business-loan-in-uae":
+    "/images/compliance.jpg",
+
+  "why-your-uae-business-bank-account-application-got-rejected":
+    "/images/bank-account-rejected.jpg",
+
+  "why-dubai-companies-choose-vision-bank":
+    "/images/vision-bank-corporate-accounts.jpg",
+
+  "why-uae-banks-freeze-accounts-and-how-to-avoid-it":
+    "/images/entity.jpg",
+
+  "open-business-account-with-mashreq-bank-dubai":
+    "/images/open-business-account-with-mashreq-bank-dubai.jpg",
+
+  "private-debt-explained":
+    "/images/private-debt-explained.jpg",
+
+  "what-is-offshore-banking-and-how-does-it-work":
+    "/images/what-is-offshore-banking-and-how-does-it-work.jpg",
+
+  "best-financial-advisors-in-dubai":
+    "/images/best-financial-advisors-in-dubai.jpg",
+
+  "offshore-business-in-seychelles":
+    "/images/offshore-business-in-seychelles.jpg",
+
+  "how-to-start-your-business-in-dubai-for-under-aed-6000":
+    "/images/how-to-start-your-business-in-dubai-for-under-aed-6000.jpg",
+
+  "how-to-buy-a-home-in-dubai-or-abu-dhabi":
+    "/images/buy-home-dubai-abu-dhabi.jpg",
+};
+
+function getPostImage(slug: string) {
+  return blogImages[slug] ?? "/images/entity.jpg";
 }
 
 /* =========================================================
@@ -1749,11 +1776,7 @@ export default function BlogPage() {
                     lg:grid-cols-3
                   "
                 >
-                  {remainingPosts.map(
-                    (
-                      post,
-                      index,
-                    ) => (
+                  {remainingPosts.map((post) => (
                       <Link
                         key={post.slug}
                         to={`/blog/${post.slug}`}
@@ -1796,10 +1819,7 @@ export default function BlogPage() {
                           "
                         >
                           <SmartImage
-                            src={getPostImage(
-                              post.slug,
-                              index + 1,
-                            )}
+                            src={getPostImage(post.slug)}
                             alt={post.title}
                             className="
                               h-full

@@ -1,3 +1,9 @@
+User-agent: SiteAuditBot
+Allow: /
+
+User-agent: SemrushBot
+Allow: /
+
 User-agent: Googlebot
 Allow: /
 

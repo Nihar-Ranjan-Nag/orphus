@@ -53,6 +53,13 @@ const revealCard = {
    DATA
 ========================================================= */
 
+const trustedByFlags = [
+  "Business Owners",
+  "Investors",
+  "Founders",
+  "Private Clients",
+];
+
 const capabilities = [
   {
     icon: Building2,
@@ -133,16 +140,6 @@ const contactMethods = [
 
 /* =========================================================
    CARD ANIMATION CLASSES
-
-   IMPORTANT:
-   The animated bar is attached directly to each card using
-   ::before.
-
-   This avoids nested group/card conflicts completely.
-
-   Bar:
-   left -> right
-   dark green -> teal -> gold
 ========================================================= */
 
 const animatedCard = `
@@ -202,8 +199,10 @@ export default function AboutPage() {
         w-full
         overflow-x-hidden
         bg-[#FFFEFA]
-        pt-[76px]
+        pt-[72px]
         text-[#0A1714]
+
+        lg:pt-[76px]
       "
     >
       {/* =====================================================
@@ -219,35 +218,18 @@ export default function AboutPage() {
           text-white
         "
       >
-        {/* GRID */}
-
         <div
           aria-hidden="true"
           className="
             pointer-events-none
             absolute
             inset-0
-            opacity-[.055]
+            opacity-[.05]
 
             [background-image:linear-gradient(rgba(255,255,255,.16)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,.16)_1px,transparent_1px)]
-            [background-size:46px_46px]
-          "
-        />
+            [background-size:36px_36px]
 
-        {/* GLOWS */}
-
-        <div
-          aria-hidden="true"
-          className="
-            pointer-events-none
-            absolute
-            -right-40
-            -top-40
-            h-[460px]
-            w-[460px]
-            rounded-full
-            bg-[#16705D]/28
-            blur-[120px]
+            sm:[background-size:46px_46px]
           "
         />
 
@@ -256,13 +238,36 @@ export default function AboutPage() {
           className="
             pointer-events-none
             absolute
-            -bottom-48
-            left-[7%]
-            h-[360px]
-            w-[360px]
+            -right-36
+            -top-36
+            h-[320px]
+            w-[320px]
             rounded-full
-            bg-[#D8B867]/12
-            blur-[110px]
+            bg-[#16705D]/24
+            blur-[100px]
+
+            sm:h-[460px]
+            sm:w-[460px]
+            sm:blur-[120px]
+          "
+        />
+
+        <div
+          aria-hidden="true"
+          className="
+            pointer-events-none
+            absolute
+            -bottom-40
+            left-[4%]
+            h-[260px]
+            w-[260px]
+            rounded-full
+            bg-[#D8B867]/10
+            blur-[90px]
+
+            sm:h-[360px]
+            sm:w-[360px]
+            sm:blur-[110px]
           "
         />
 
@@ -271,10 +276,13 @@ export default function AboutPage() {
             section-shell
             relative
             grid
-            gap-8
-            py-10
+            gap-5
+            py-7
 
-            sm:py-12
+            sm:gap-7
+            sm:py-10
+
+            md:py-12
 
             lg:grid-cols-[1.05fr_.95fr]
             lg:items-center
@@ -300,47 +308,59 @@ export default function AboutPage() {
             transition={{
               duration: 0.65,
             }}
+            className="min-w-0"
           >
             <div
               className="
                 inline-flex
                 items-center
-                gap-2
+                gap-1.5
                 rounded-full
                 border
                 border-[#D8B867]/28
                 bg-white/[.04]
-                px-3.5
-                py-2
-                text-[10px]
+                px-3
+                py-1.5
+                text-[9px]
                 font-extrabold
                 uppercase
-                tracking-[.17em]
+                tracking-[.14em]
                 text-[#E4C875]
+
+                sm:gap-2
+                sm:px-3.5
+                sm:py-2
+                sm:text-[10px]
+                sm:tracking-[.17em]
               "
             >
-              <Sparkles size={12} />
+              <Sparkles size={11} />
               About Orpheus
             </div>
 
             <h1
               className="
-                mt-5
+                mt-4
                 max-w-[700px]
                 font-serif
-                text-[39px]
+                text-[34px]
                 font-normal
-                leading-[.97]
-                tracking-[-.043em]
+                leading-[.98]
+                tracking-[-.04em]
 
+                min-[390px]:text-[37px]
+
+                sm:mt-5
                 sm:text-[48px]
+
                 md:text-[56px]
+
                 lg:text-[60px]
+
                 xl:text-[64px]
               "
             >
               Advice begins with understanding{" "}
-
               <span className="italic text-[#8BCBBB]">
                 the objective.
               </span>
@@ -348,13 +368,15 @@ export default function AboutPage() {
 
             <p
               className="
-                mt-5
+                mt-4
                 max-w-[630px]
-                text-[15px]
-                leading-7
-                text-white/72
+                text-[14px]
+                leading-6
+                text-white/70
 
+                sm:mt-5
                 sm:text-[16px]
+                sm:leading-7
               "
             >
               Orpheus supports businesses, founders, investors and
@@ -362,32 +384,117 @@ export default function AboutPage() {
               capital and international ownership requirements.
             </p>
 
+            {/* TRUSTED BY FLAGS - NO REPEAT, NO OVERFLOW */}
+
             <div
               className="
-                mt-7
-                flex
-                flex-col
-                gap-3
+                mt-4
+                w-full
+                max-w-full
+              "
+            >
+              <p
+                className="
+                  text-[9px]
+                  font-extrabold
+                  uppercase
+                  tracking-[.16em]
+                  text-[#E4C875]
 
+                  sm:text-[10px]
+                "
+              >
+                Trusted by
+              </p>
+
+              <div
+                className="
+                  mt-2
+                  grid
+                  w-full
+                  grid-cols-2
+                  gap-2
+
+                  sm:flex
+                  sm:flex-wrap
+                  sm:gap-2
+                "
+              >
+                {trustedByFlags.map((item) => (
+                  <span
+                    key={item}
+                    className="
+                      inline-flex
+                      min-h-[30px]
+                      w-full
+                      min-w-0
+                      items-center
+                      justify-center
+                      gap-1.5
+                      rounded-full
+                      border
+                      border-white/10
+                      bg-white/[.055]
+                      px-2.5
+                      py-1.5
+                      text-center
+                      text-[10px]
+                      font-semibold
+                      leading-none
+                      text-white/76
+                      backdrop-blur-sm
+
+                      sm:w-auto
+                      sm:px-3
+                      sm:text-[11px]
+                    "
+                  >
+                    <span
+                      className="
+                        h-1.5
+                        w-1.5
+                        shrink-0
+                        rounded-full
+                        bg-[#8BCBBB]
+                      "
+                    />
+
+                    <span className="truncate">
+                      {item}
+                    </span>
+                  </span>
+                ))}
+              </div>
+            </div>
+
+            <div
+              className="
+                mt-5
+                grid
+                gap-2.5
+
+                sm:mt-6
+                sm:flex
                 sm:flex-row
+                sm:gap-3
               "
             >
               <a
                 href="#capabilities"
                 className="
                   inline-flex
-                  min-h-[44px]
+                  min-h-[42px]
                   w-full
                   items-center
                   justify-center
                   gap-2
                   rounded-lg
                   bg-[#D8B867]
-                  px-5
-                  text-[10px]
+                  px-4
+                  text-[9px]
                   font-extrabold
                   uppercase
-                  tracking-[.11em]
+                  tracking-[.1em]
                   text-[#06271F]
 
                   transition-all
@@ -396,7 +503,10 @@ export default function AboutPage() {
                   hover:-translate-y-0.5
                   hover:bg-[#E5CC88]
 
+                  sm:min-h-[44px]
                   sm:w-auto
+                  sm:px-5
+                  sm:text-[10px]
                 "
               >
                 Explore capabilities
@@ -407,7 +517,7 @@ export default function AboutPage() {
                 to="/contact"
                 className="
                   inline-flex
-                  min-h-[44px]
+                  min-h-[42px]
                   w-full
                   items-center
                   justify-center
@@ -416,11 +526,11 @@ export default function AboutPage() {
                   border
                   border-white/18
                   bg-white/[.05]
-                  px-5
-                  text-[10px]
+                  px-4
+                  text-[9px]
                   font-extrabold
                   uppercase
-                  tracking-[.11em]
+                  tracking-[.1em]
                   text-white
 
                   transition-all
@@ -428,7 +538,10 @@ export default function AboutPage() {
 
                   hover:bg-white/[.1]
 
+                  sm:min-h-[44px]
                   sm:w-auto
+                  sm:px-5
+                  sm:text-[10px]
                 "
               >
                 Speak with us
@@ -436,9 +549,7 @@ export default function AboutPage() {
             </div>
           </motion.div>
 
-          {/* =================================================
-              HERO RIGHT CARD
-          ================================================= */}
+          {/* HERO RIGHT */}
 
           <motion.div
             initial={
@@ -460,11 +571,11 @@ export default function AboutPage() {
             className={`
               ${animatedDarkCard}
 
-              rounded-[22px]
+              rounded-[18px]
               border
               border-white/10
               bg-white/[.055]
-              p-5
+              p-4
               backdrop-blur-md
 
               transition-all
@@ -472,19 +583,20 @@ export default function AboutPage() {
               ease-out
 
               hover:-translate-y-1
-              hover:scale-[1.015]
               hover:border-white/20
               hover:shadow-[0_18px_40px_rgba(0,0,0,.14)]
 
-              sm:p-6
+              sm:rounded-[22px]
+              sm:p-5
+
               lg:p-7
             `}
           >
             <span
               className="
                 flex
-                h-11
-                w-11
+                h-9
+                w-9
                 items-center
                 justify-center
                 rounded-full
@@ -495,22 +607,27 @@ export default function AboutPage() {
                 duration-300
 
                 hover:scale-110
+
+                sm:h-11
+                sm:w-11
               "
             >
-              <Waypoints size={18} />
+              <Waypoints size={16} />
             </span>
 
             <h2
               className="
-                mt-5
+                mt-4
                 max-w-[450px]
                 font-serif
-                text-[27px]
+                text-[23px]
                 font-normal
-                leading-[1.06]
-                tracking-[-.03em]
+                leading-[1.08]
+                tracking-[-.025em]
 
+                sm:mt-5
                 sm:text-[31px]
+
                 lg:text-[34px]
               "
             >
@@ -521,11 +638,12 @@ export default function AboutPage() {
               className="
                 mt-3
                 max-w-[520px]
-                text-[14px]
-                leading-6
-                text-white/64
+                text-[13px]
+                leading-5
+                text-white/62
 
                 sm:text-[15px]
+                sm:leading-6
               "
             >
               Rather than beginning with a jurisdiction, product or
@@ -533,15 +651,14 @@ export default function AboutPage() {
               accomplish.
             </p>
 
-            {/* HERO SMALL CARDS */}
-
             <div
               className="
-                mt-5
+                mt-4
                 grid
+                grid-cols-2
                 gap-2
 
-                sm:grid-cols-2
+                sm:mt-5
               "
             >
               {[
@@ -556,49 +673,55 @@ export default function AboutPage() {
                     ${animatedDarkCard}
 
                     flex
-                    min-h-[46px]
+                    min-h-[40px]
                     items-center
-                    gap-2.5
+                    gap-2
 
                     rounded-xl
-
                     border
                     border-white/[.08]
-
                     bg-white/[.05]
+                    px-3
 
-                    px-3.5
-
-                    text-[14px]
+                    text-[12px]
                     font-semibold
-                    text-white/86
+                    text-white/84
 
                     transition-all
                     duration-300
 
                     hover:-translate-y-0.5
-                    hover:scale-[1.02]
                     hover:border-white/15
                     hover:bg-white/[.09]
+
+                    sm:min-h-[46px]
+                    sm:gap-2.5
+                    sm:px-3.5
+                    sm:text-[14px]
                   `}
                 >
                   <span
                     className="
                       flex
-                      h-6
-                      w-6
+                      h-5
+                      w-5
                       shrink-0
                       items-center
                       justify-center
                       rounded-full
                       bg-[#8BCBBB]
                       text-[#06271F]
+
+                      sm:h-6
+                      sm:w-6
                     "
                   >
-                    <Check size={11} />
+                    <Check size={10} />
                   </span>
 
-                  {item}
+                  <span className="min-w-0 leading-tight">
+                    {item}
+                  </span>
                 </div>
               ))}
             </div>
@@ -701,12 +824,9 @@ export default function AboutPage() {
                     ${animatedCard}
 
                     rounded-[17px]
-
                     border
                     border-[#DCE2DC]
-
                     bg-white
-
                     p-4
 
                     transition-all
@@ -716,7 +836,6 @@ export default function AboutPage() {
                     hover:-translate-y-1
                     hover:scale-[1.025]
                     hover:border-[#0B5345]/25
-
                     hover:shadow-[0_14px_30px_rgba(7,40,33,.075)]
                   `}
                 >
@@ -727,18 +846,9 @@ export default function AboutPage() {
                       w-10
                       items-center
                       justify-center
-
                       rounded-full
-
                       bg-[#E8F2EE]
-
                       text-[#0B5345]
-
-                      transition-all
-                      duration-300
-
-                      group-hover:bg-[#0B5345]
-                      group-hover:text-white
                     "
                   >
                     <Icon size={16} />
@@ -870,12 +980,9 @@ export default function AboutPage() {
                     ${animatedCard}
 
                     rounded-[17px]
-
                     border
                     border-[#DCE2DC]
-
                     bg-[#FAFBF8]
-
                     p-5
 
                     transition-all
@@ -886,7 +993,6 @@ export default function AboutPage() {
                     hover:scale-[1.025]
                     hover:border-[#0B5345]/25
                     hover:bg-white
-
                     hover:shadow-[0_14px_32px_rgba(7,40,33,.075)]
                   `}
                 >
@@ -945,25 +1051,18 @@ export default function AboutPage() {
             )}
           </motion.div>
 
-          {/* CTA CARD */}
-
           <div
             className={`
               ${animatedCard}
 
               mt-5
-
               flex
               flex-col
               gap-3
-
               rounded-[16px]
-
               border
               border-[#DCE2DD]
-
               bg-[#F7F4EC]
-
               px-5
               py-4
 
@@ -974,7 +1073,6 @@ export default function AboutPage() {
               hover:-translate-y-1
               hover:scale-[1.01]
               hover:border-[#0B5345]/20
-
               hover:shadow-[0_12px_28px_rgba(7,40,33,.07)]
 
               sm:flex-row
@@ -1016,18 +1114,13 @@ export default function AboutPage() {
                 items-center
                 justify-center
                 gap-2
-
                 rounded-lg
-
                 bg-[#0B5345]
-
                 px-4
-
                 text-[10px]
                 font-extrabold
                 uppercase
                 tracking-[.1em]
-
                 text-white
 
                 transition-all
@@ -1068,21 +1161,14 @@ export default function AboutPage() {
               lg:grid-cols-[1.25fr_.75fr]
             "
           >
-            {/* =================================================
-                GLOBAL REACH MAIN CARD
-            ================================================= */}
-
             <article
               className={`
                 ${animatedCard}
 
                 grid
-
                 rounded-[20px]
-
                 border
                 border-[#DDE3DE]
-
                 bg-white
 
                 transition-all
@@ -1091,14 +1177,11 @@ export default function AboutPage() {
 
                 hover:-translate-y-1
                 hover:scale-[1.01]
-
                 hover:shadow-[0_16px_38px_rgba(7,40,33,.07)]
 
                 md:grid-cols-[1.05fr_.95fr]
               `}
             >
-              {/* LEFT */}
-
               <div
                 className="
                   p-5
@@ -1114,7 +1197,6 @@ export default function AboutPage() {
                     font-extrabold
                     uppercase
                     tracking-[.16em]
-
                     text-[#0B5345]
                   "
                 >
@@ -1124,16 +1206,11 @@ export default function AboutPage() {
                 <h2
                   className="
                     mt-2
-
                     max-w-[540px]
-
                     font-serif
-
                     text-[29px]
                     font-normal
-
                     leading-[1.04]
-
                     tracking-[-.03em]
 
                     sm:text-[34px]
@@ -1151,12 +1228,9 @@ export default function AboutPage() {
                 <p
                   className="
                     mt-3
-
                     max-w-[540px]
-
                     text-[14px]
                     leading-6
-
                     text-[#566861]
 
                     sm:text-[15px]
@@ -1166,12 +1240,9 @@ export default function AboutPage() {
                   international banking, capital and private wealth.
                 </p>
 
-                {/* TAGS */}
-
                 <div
                   className="
                     mt-4
-
                     flex
                     flex-wrap
                     gap-2
@@ -1188,18 +1259,13 @@ export default function AboutPage() {
                       key={item}
                       className="
                         rounded-full
-
                         border
                         border-[#E1E5E1]
-
                         bg-[#F3F5F1]
-
                         px-3
                         py-1.5
-
                         text-[11px]
                         font-semibold
-
                         text-[#455650]
 
                         transition-all
@@ -1215,21 +1281,15 @@ export default function AboutPage() {
                   ))}
                 </div>
 
-                {/* REGIONAL ADVANTAGE CARD */}
-
                 <div
                   className={`
                     ${animatedCard}
 
                     mt-5
-
                     rounded-[14px]
-
                     border
                     border-[#DDE3DE]
-
                     bg-[#FAFBF8]
-
                     p-4
 
                     transition-all
@@ -1238,7 +1298,6 @@ export default function AboutPage() {
                     hover:-translate-y-0.5
                     hover:scale-[1.01]
                     hover:border-[#0B5345]/20
-
                     hover:shadow-[0_10px_24px_rgba(7,40,33,.05)]
 
                     sm:p-5
@@ -1250,7 +1309,6 @@ export default function AboutPage() {
                       font-extrabold
                       uppercase
                       tracking-[.14em]
-
                       text-[#A7802D]
                     "
                   >
@@ -1260,12 +1318,9 @@ export default function AboutPage() {
                   <p
                     className="
                       mt-2
-
                       max-w-[520px]
-
                       text-[13px]
                       leading-5
-
                       text-[#5F6F69]
 
                       sm:text-[14px]
@@ -1280,7 +1335,6 @@ export default function AboutPage() {
                   <div
                     className="
                       mt-4
-
                       grid
                       gap-2
                     "
@@ -1331,19 +1385,12 @@ export default function AboutPage() {
                 </div>
               </div>
 
-              {/* =============================================
-                  RIGHT GREEN PANEL
-              ============================================= */}
-
               <div
                 className="
                   relative
                   overflow-hidden
-
                   bg-[#062F27]
-
                   p-5
-
                   text-white
 
                   sm:p-5
@@ -1444,8 +1491,6 @@ export default function AboutPage() {
                     investors and private clients.
                   </p>
 
-                  {/* GREEN PANEL CARDS */}
-
                   <div
                     className="
                       mt-5
@@ -1486,14 +1531,10 @@ export default function AboutPage() {
                             flex
                             items-start
                             gap-3
-
                             rounded-[11px]
-
                             border
                             border-white/[.08]
-
                             bg-white/[.045]
-
                             p-3
 
                             transition-all
@@ -1554,21 +1595,14 @@ export default function AboutPage() {
               </div>
             </article>
 
-            {/* =================================================
-                CONTACT PANEL
-            ================================================= */}
-
             <div
               className={`
                 ${animatedCard}
 
                 rounded-[20px]
-
                 border
                 border-[#DDE3DE]
-
                 bg-white
-
                 p-5
 
                 transition-all
@@ -1578,7 +1612,6 @@ export default function AboutPage() {
                 hover:-translate-y-1
                 hover:scale-[1.01]
                 hover:border-[#0B5345]/20
-
                 hover:shadow-[0_16px_34px_rgba(7,40,33,.075)]
 
                 sm:p-6
@@ -1590,7 +1623,6 @@ export default function AboutPage() {
                   font-extrabold
                   uppercase
                   tracking-[.16em]
-
                   text-[#0B5345]
                 "
               >
@@ -1600,12 +1632,9 @@ export default function AboutPage() {
               <h2
                 className="
                   mt-2
-
                   font-serif
-
                   text-[28px]
                   font-normal
-
                   leading-[1.04]
 
                   sm:text-[30px]
@@ -1635,14 +1664,10 @@ export default function AboutPage() {
                         flex
                         items-center
                         gap-3
-
                         rounded-[13px]
-
                         border
                         border-[#E0E5E1]
-
                         bg-[#FAFBF8]
-
                         p-3.5
 
                         transition-all
@@ -1652,9 +1677,7 @@ export default function AboutPage() {
                         hover:-translate-y-0.5
                         hover:scale-[1.02]
                         hover:border-[#0B5345]/25
-
                         hover:bg-white
-
                         hover:shadow-[0_8px_24px_rgba(7,40,33,.06)]
                       `}
                     >
@@ -1710,25 +1733,19 @@ export default function AboutPage() {
                 to="/contact"
                 className="
                   mt-4
-
                   inline-flex
                   min-h-[40px]
                   w-full
                   items-center
                   justify-center
                   gap-2
-
                   rounded-lg
-
                   bg-[#0B5345]
-
                   px-4
-
                   text-[10px]
                   font-extrabold
                   uppercase
                   tracking-[.1em]
-
                   text-white
 
                   transition-all
@@ -1736,7 +1753,6 @@ export default function AboutPage() {
 
                   hover:-translate-y-0.5
                   hover:bg-[#106856]
-
                   hover:shadow-[0_8px_20px_rgba(11,83,69,.15)]
                 "
               >

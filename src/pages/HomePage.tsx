@@ -53,6 +53,8 @@ import {
 
 import { toast } from "@/hooks/use-toast";
 
+const SHOW_UAE_GUIDE_BLOCK = false;
+
 /* =========================================================
    ANIMATION
 ========================================================= */
@@ -2542,6 +2544,7 @@ export default function HomePage() {
             </motion.div>
           </div>
 
+          {SHOW_UAE_GUIDE_BLOCK && (
           <motion.div
             initial={
               reduceMotion
@@ -2670,6 +2673,7 @@ export default function HomePage() {
               Guide coming soon
             </button>
           </motion.div>
+          )}
         </div>
       </section>
 

@@ -1,5 +1,4 @@
 import { ArrowRight } from "lucide-react";
-
 import { useState } from "react";
 import { Link } from "react-router-dom";
 
@@ -18,11 +17,11 @@ export function HomeHero() {
       {/* =====================================================
           MAIN HERO
       ===================================================== */}
-
       <div
         className="
           relative
-          min-h-[560px]
+          min-h-[500px]
+          min-[390px]:min-h-[520px]
           sm:min-h-[580px]
           md:min-h-[600px]
           lg:min-h-[620px]
@@ -32,7 +31,6 @@ export function HomeHero() {
         {/* =====================================================
             BACKGROUND IMAGE
         ===================================================== */}
-
         <div className="absolute inset-0">
           <img
             src={heroImage}
@@ -46,13 +44,12 @@ export function HomeHero() {
               h-full
               w-full
               object-cover
-              object-[50%_top]
-
+              object-[58%_top]
               brightness-[1.12]
               contrast-[1.04]
               saturate-[1.08]
 
-              sm:object-[50%_top]
+              sm:object-[54%_top]
               md:object-[52%_top]
               lg:object-[55%_top]
               xl:object-[56%_top]
@@ -60,36 +57,32 @@ export function HomeHero() {
           />
 
           {/* LEFT DARK OVERLAY */}
-
           <div
             className="absolute inset-0"
             style={{
               background:
-                "linear-gradient(90deg, rgba(3,22,16,0.90) 0%, rgba(3,22,16,0.86) 24%, rgba(3,22,16,0.78) 38%, rgba(3,22,16,0.58) 48%, rgba(3,22,16,0.24) 58%, rgba(3,22,16,0.06) 70%, rgba(3,22,16,0.00) 82%)",
+                "linear-gradient(90deg, rgba(3,22,16,0.94) 0%, rgba(3,22,16,0.90) 26%, rgba(3,22,16,0.78) 42%, rgba(3,22,16,0.58) 54%, rgba(3,22,16,0.24) 66%, rgba(3,22,16,0.06) 78%, rgba(3,22,16,0.00) 90%)",
             }}
           />
 
           {/* BOTTOM FADE */}
-
           <div
             className="absolute inset-0"
             style={{
               background:
-                "linear-gradient(0deg, rgba(3,22,16,0.78) 0%, rgba(3,22,16,0.42) 9%, rgba(3,22,16,0.10) 22%, rgba(3,22,16,0) 36%)",
+                "linear-gradient(0deg, rgba(3,22,16,0.82) 0%, rgba(3,22,16,0.48) 12%, rgba(3,22,16,0.14) 28%, rgba(3,22,16,0) 42%)",
             }}
           />
 
           {/* SUBTLE EMERALD TINT */}
-
           <div className="absolute inset-0 bg-[#0B5345]/[0.02]" />
 
           {/* MOBILE READABILITY */}
-
           <div
             className="absolute inset-0 md:hidden"
             style={{
               background:
-                "linear-gradient(180deg, rgba(3,22,16,0.45) 0%, rgba(3,22,16,0.62) 52%, rgba(3,22,16,0.90) 100%)",
+                "linear-gradient(180deg, rgba(3,22,16,0.50) 0%, rgba(3,22,16,0.64) 46%, rgba(3,22,16,0.94) 100%)",
             }}
           />
         </div>
@@ -97,20 +90,22 @@ export function HomeHero() {
         {/* =====================================================
             CONTENT
         ===================================================== */}
-
         <div
           className="
             relative
             z-10
             mx-auto
             flex
-            min-h-[560px]
+            min-h-[500px]
             max-w-[1480px]
             items-center
             px-5
-            py-10
+            py-8
+
+            min-[390px]:min-h-[520px]
 
             sm:min-h-[580px]
+            sm:py-10
 
             md:min-h-[600px]
             md:px-10
@@ -124,19 +119,20 @@ export function HomeHero() {
         >
           <div className="w-full max-w-[720px]">
             {/* EYEBROW */}
-
             <div className="flex items-center gap-3">
               <span className="h-px w-7 shrink-0 bg-[#D8B867]" />
 
               <p
                 className="
-                  text-[11px]
+                  text-[10px]
                   font-extrabold
                   uppercase
-                  tracking-[.20em]
+                  tracking-[.18em]
                   text-[#D8B867]
 
+                  sm:text-[11px]
                   md:text-[13px]
+                  md:tracking-[.20em]
                 "
               >
                 LEAD ARCHITECT. DIRECT EXECUTION.
@@ -144,61 +140,66 @@ export function HomeHero() {
             </div>
 
             {/* HEADING */}
-
             <h1
               className="
-                mt-5
+                mt-4
                 max-w-[760px]
 
                 font-serif
-                text-[clamp(42px,5.3vw,76px)]
+                text-[clamp(38px,10.4vw,48px)]
                 font-normal
-                leading-[.97]
+                leading-[.98]
                 tracking-[-.045em]
 
                 text-white
 
                 [text-shadow:0_2px_18px_rgba(0,0,0,.35)]
+
+                min-[390px]:text-[clamp(40px,10vw,52px)]
+
+                sm:mt-5
+                sm:text-[clamp(48px,8vw,66px)]
+
+                md:text-[clamp(56px,6.2vw,76px)]
+                lg:text-[clamp(62px,5.3vw,76px)]
               "
             >
               Structuring capital,
               <br />
-
               entities and wealth
               <br />
-
-              <span className="text-[#59B79E]">
-                across borders.
-              </span>
+              <span className="text-[#59B79E]">across borders.</span>
             </h1>
 
             {/* COPY */}
-
             <p
               className="
-                mt-5
-                max-w-[650px]
+                mt-4
+                max-w-[680px]
 
                 text-[16px]
-                leading-7
+                leading-[1.78]
 
-                text-white/90
+                 text-white/82
 
-                md:text-[18px]
+                min-[390px]:text-[16.5px]
+
+                md:mt-5
+                md:text-[18.5px]
                 md:leading-8
+                md:text-white/84
 
-                lg:text-[17px]
+                lg:text-[18px]
               "
             >
               Orpheus Financial architects and executes complex corporate,
-              banking, capital and private wealth solutions from Dubai. Our
-              team leads each engagement from strategy and structuring through
+              banking, capital and private wealth solutions from Dubai. Our team
+              leads each engagement from strategy and structuring through
               documentation, implementation and ongoing support — not simply
               introductions to third parties.
             </p>
 
             {/* CTA */}
-
             <div className="mt-6 flex flex-wrap gap-3">
               <Link
                 to="/services"
@@ -257,198 +258,185 @@ export function HomeHero() {
         {/* =====================================================
             RIGHT FINANCE LABEL
         ===================================================== */}
-
-         
       </div>
 
       {/* =====================================================
           TRUST PILLARS
 
           MOBILE:
-          Exactly same 2-column compact structure.
+          Compact 2-column and 2-row layout exactly like screenshot.
 
           DESKTOP:
-          Bigger title, description and icon.
+          Same horizontal 4-column premium layout with brighter description.
       ===================================================== */}
-
       <div className="relative z-20 border-t border-white/10 bg-[#061711]">
         <div
           className="
             mx-auto
-            grid
             max-w-[1480px]
-
-            grid-cols-2
-
             px-4
 
             sm:px-5
-
-            md:grid-cols-4
             md:px-10
-
             xl:px-16
           "
         >
-          {trustPillars.map((pillar, index) => {
-            const Icon = pillar.icon;
+          <div
+            className="
+              grid
+              grid-cols-2
+              border-x
+              border-white/10
 
-            return (
-              <div
-                key={pillar.title}
-                className={`
-                  group
+              md:grid-cols-4
+            "
+          >
+            {trustPillars.map((pillar, index) => {
+              const Icon = pillar.icon;
 
-                  flex
-                  min-h-[70px]
-
-                  items-center
-                  gap-2
-
-                  py-3
-                  pr-2
-
-                  transition-colors
-                  duration-300
-
-                  hover:bg-white/[0.018]
-
-                  sm:min-h-[86px]
-                  sm:gap-2.5
-                  sm:py-4
-                  sm:pr-4
-
-                  md:min-h-[118px]
-                  md:gap-3
-                  md:px-4
-                  md:py-5
-
-                  lg:min-h-[132px]
-                  lg:gap-4
-                  lg:px-5
-                  lg:py-6
-
-                  xl:min-h-[145px]
-                  xl:px-6
-                  xl:py-7
-
-                  ${
-                    index % 2 === 1
-                      ? "border-l border-white/10 pl-3 md:pl-4 lg:pl-5"
-                      : ""
-                  }
-
-                  ${
-                    index > 1
-                      ? "border-t border-white/10 md:border-t-0"
-                      : ""
-                  }
-
-                  ${
-                    index === 2
-                      ? "md:border-l md:border-white/10 md:pl-4 lg:pl-5"
-                      : ""
-                  }
-                `}
-              >
-                {/* ICON */}
-
+              return (
                 <div
-                  className="
+                  key={pillar.title}
+                  className={`
+                    group
+
                     flex
-                    h-7
-                    w-7
-                    shrink-0
-
+                    min-h-[70px]
                     items-center
-                    justify-center
+                    gap-2.5
 
-                    rounded-full
+                    px-3
+                    py-3
 
-                    border
-                    border-[#D8B867]/15
+                    transition-colors
+                    duration-300
 
-                    bg-[#D8B867]/[0.035]
+                    hover:bg-white/[0.018]
 
-                    md:h-9
-                    md:w-9
+                    min-[390px]:min-h-[74px]
+                    min-[390px]:gap-3
+                    min-[390px]:px-4
 
-                    lg:h-10
-                    lg:w-10
+                    sm:min-h-[84px]
+                    sm:py-4
 
-                    xl:h-11
-                    xl:w-11
-                  "
+                    md:min-h-[124px]
+                    md:items-start
+                    md:gap-3
+                    md:px-4
+                    md:py-5
+
+                    lg:min-h-[138px]
+                    lg:gap-4
+                    lg:px-5
+                    lg:py-6
+
+                    xl:min-h-[150px]
+                    xl:px-6
+                    xl:py-7
+
+                    ${index % 2 === 1 ? "border-l border-white/10" : ""}
+                    ${index > 1 ? "border-t border-white/10 md:border-t-0" : ""}
+                    ${index > 0 ? "md:border-l md:border-white/10" : ""}
+                  `}
                 >
-                  <Icon
-                    size={12}
+                  {/* ICON */}
+                  <div
                     className="
-                      text-[#D8B867]
+                      flex
+                      h-7
+                      w-7
+                      shrink-0
 
-                      md:size-[16px]
-                      lg:size-[18px]
-                      xl:size-[19px]
-                    "
-                  />
-                </div>
+                      items-center
+                      justify-center
 
-                {/* TEXT */}
+                      rounded-full
 
-                <div className="min-w-0">
-                  <h3
-                    className="
-                      font-serif
-                      text-[15px]
-                      font-normal
-                      leading-[1.08]
+                      border
+                      border-[#D8B867]/20
 
-                      text-white
+                      bg-[#D8B867]/[0.055]
 
-                      sm:text-[16px]
+                      md:h-9
+                      md:w-9
 
-                      md:text-[17px]
-                      md:leading-[1.15]
+                      lg:h-10
+                      lg:w-10
 
-                      lg:text-[19px]
-
-                      xl:text-[20px]
+                      xl:h-11
+                      xl:w-11
                     "
                   >
-                    {pillar.title}
-                  </h3>
+                    <Icon
+                      size={12}
+                      className="
+                        text-[#D8B867]
 
-                  <p
-                    className="
-                      mt-1
-                      hidden
-                      max-w-[270px]
+                        md:size-[16px]
+                        lg:size-[18px]
+                        xl:size-[19px]
+                      "
+                    />
+                  </div>
 
-                      text-[11px]
-                      leading-[1.45]
+                  {/* TEXT */}
+                  <div className="min-w-0">
+                    <h3
+                      className="
+                        font-serif
+                        text-[14px]
+                        font-normal
+                        leading-[1.08]
 
-                      text-white/46
+                        text-white
 
-                      sm:block
-                      sm:text-[11px]
+                        min-[390px]:text-[15px]
 
-                      md:mt-2
-                      md:text-[13px]
-                      md:leading-[1.55]
-                      md:text-white/60
+                        sm:text-[16px]
 
-                      lg:text-[12.5px]
-                      lg:leading-5
+                        md:text-[17px]
+                        md:leading-[1.15]
 
-                      xl:text-[13.5px]
-                      xl:leading-[1.6]
-                    "
-                  >
-                    {pillar.text}
-                  </p>
+                        lg:text-[19px]
+
+                        xl:text-[20px]
+                      "
+                    >
+                      {pillar.title}
+                    </h3>
+
+                    <p
+                      className="
+                        mt-1.5
+                        hidden
+                        max-w-[290px]
+
+                        text-[12.5px]
+                        leading-[1.55]
+
+                         text-white/56
+
+                        md:mt-2
+                        md:block
+                        md:text-[13.5px]
+                        md:leading-[1.65]
+                        md:text-white/60
+
+                        lg:text-[14px]
+                        lg:leading-[1.65]
+
+                        xl:text-[14.5px]
+                        xl:leading-[1.7]
+                      "
+                    >
+                      {pillar.text}
+                    </p>
+                  </div>
                 </div>
-              </div>
-            );
-          })}
+              );
+            })}
+          </div>
         </div>
       </div>
     </section>

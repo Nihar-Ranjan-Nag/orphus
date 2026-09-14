@@ -4,6 +4,7 @@ import {
   Clock3,
   Mail,
   Quote,
+  Linkedin,
 } from "lucide-react";
 
 import {
@@ -1081,7 +1082,7 @@ export default function BlogPostPage() {
                     <a
                       key={index}
                       href={`#section-${index}`}
-                      className={`
+                      className="
                         flex
                         shrink-0
                         items-center
@@ -1090,6 +1091,9 @@ export default function BlogPostPage() {
                         rounded-full
 
                         border
+                        border-[#0B5345]
+
+                        bg-[#0B5345]
 
                         px-4
                         py-2.5
@@ -1099,34 +1103,22 @@ export default function BlogPostPage() {
 
                         leading-none
 
-                        transition-all
+                        text-white
 
-                        ${
-                          activeIdx === index
-                            ? `
-                                border-[#0B5345]
-                                bg-[#0B5345]
-                                text-white
-                              `
-                            : `
-                                border-[#D7DDD8]
-                                bg-white
-                                text-[#586660]
-                              `
-                        }
-                      `}
+                        shadow-[0_8px_20px_rgba(7,40,33,.10)]
+
+                        transition-all
+                        duration-300
+
+                        hover:bg-[#0E6554]
+                      "
                     >
                       <span
-                        className={`
+                        className="
                           text-[10px]
                           font-bold
-
-                          ${
-                            activeIdx === index
-                              ? "text-[#E4C77D]"
-                              : "text-[#A7802D]"
-                          }
-                        `}
+                          text-[#E4C77D]
+                        "
                       >
                         {String(index + 1).padStart(2, "0")}
                       </span>
@@ -1394,120 +1386,204 @@ export default function BlogPostPage() {
 
             {/* =================================================
                 AUTHOR END CARD
+                Simple realistic card using actual image
             ================================================= */}
 
             <div
               className="
                 mt-12
-
+                overflow-hidden
                 rounded-[18px]
-
+                border
+                border-[#DDE2DD]
                 bg-[#07251E]
-
-                p-5
-
+                p-4
                 text-white
+                shadow-[0_14px_32px_rgba(7,40,33,.10)]
 
                 sm:mt-14
-                sm:rounded-[22px]
-                sm:p-6
+                sm:rounded-[20px]
+                sm:p-5
 
                 md:mt-16
-                md:p-7
+                md:p-6
               "
             >
-              <p className="section-kicker-gold">
-                ABOUT THE AUTHOR
-              </p>
-
               <div
                 className="
-                  mt-5
-
                   flex
                   items-start
                   gap-4
+
+                  sm:gap-5
                 "
               >
+                {/* AUTHOR IMAGE - compact, no cutting */}
                 <div
                   className="
+                    relative
                     flex
-
-                    h-10
-                    w-10
+                    h-[72px]
+                    w-[72px]
                     shrink-0
-
                     items-center
                     justify-center
-
+                    overflow-hidden
                     rounded-full
+                    border
+                    border-[#D8B867]/35
+                    bg-[#092D25]
+                    shadow-[0_10px_22px_rgba(0,0,0,.16)]
 
-                    bg-[#0B5345]
-
-                    text-[12px]
-                    font-bold
-
-                    sm:h-11
-                    sm:w-11
-                    sm:text-[13px]
+                    sm:h-[84px]
+                    sm:w-[84px]
                   "
                 >
-                  {post.author.initials}
+                  <img
+                    src="/images/rachit.jpeg"
+                    alt="Rachit Yadav"
+                    className="
+                      h-full
+                      w-full
+                      object-contain
+                      object-center
+                    "
+                    loading="lazy"
+                  />
                 </div>
 
-                <div className="min-w-0">
-                  <p
+                {/* AUTHOR CONTENT */}
+                <div className="min-w-0 flex-1">
+                  <div
                     className="
-                      break-words
-
-                      font-serif
-
-                      text-[21px]
-                      font-normal
-
-                      sm:text-[23px]
+                      flex
+                      items-start
+                      justify-between
+                      gap-3
                     "
                   >
-                    {post.author.name}
-                  </p>
+                    <div className="min-w-0">
+                      <p className="section-kicker-gold">
+                        ABOUT THE AUTHOR
+                      </p>
+
+                      <h3
+                        className="
+                          mt-1.5
+                          break-words
+                          font-serif
+                          text-[23px]
+                          font-normal
+                          leading-tight
+
+                          sm:text-[26px]
+                          md:text-[28px]
+                        "
+                      >
+                        Rachit Yadav
+                      </h3>
+
+                      <p
+                        className="
+                          mt-1
+                          break-words
+                          text-[10px]
+                          font-bold
+                          uppercase
+                          tracking-[.1em]
+                          text-[#D8B867]/85
+
+                          sm:text-[11px]
+                        "
+                      >
+                        CEO · Orpheus Financial
+                      </p>
+                    </div>
+
+                    <a
+                      href="https://www.linkedin.com/in/rachit-yadav-96a3951b9?utm_source=share_via&utm_content=profile&utm_medium=member_ios"
+                      target="_blank"
+                      rel="noreferrer"
+                      aria-label="Open Rachit Yadav LinkedIn profile"
+                      title="LinkedIn"
+                      className="
+                        inline-flex
+                        h-9
+                        w-9
+                        shrink-0
+                        items-center
+                        justify-center
+                        rounded-full
+                        border
+                        border-[#D8B867]/25
+                        bg-[#D8B867]/10
+                        text-[#E4C77D]
+                        transition-all
+                        duration-300
+                        hover:-translate-y-0.5
+                        hover:bg-[#D8B867]
+                        hover:text-[#071813]
+
+                        sm:h-10
+                        sm:w-10
+                      "
+                    >
+                      <Linkedin size={17} />
+                    </a>
+                  </div>
 
                   <p
                     className="
-                      mt-1
-
-                      text-[10px]
-                      uppercase
-                      tracking-[.12em]
-
-                      text-white/50
-
-                      sm:text-[12px]
-                    "
-                  >
-                    {post.author.role}
-                  </p>
-
-                  <p
-                    className="
-                      mt-4
-
-                      max-w-[560px]
-
+                      mt-3
+                      max-w-[620px]
                       break-words
-
-                      text-[14px]
-
+                      text-[13.5px]
                       leading-6
+                      text-white/70
 
-                      text-white/62
-
-                      sm:text-[15px]
+                      sm:text-[14.5px]
+                      sm:leading-7
                     "
                   >
-                    Orpheus Financial provides cross-border advisory
-                    across corporate structuring, banking, capital
-                    solutions, private wealth and governance.
+                    Rachit Yadav is the CEO of Orpheus Financial, helping
+                    business owners unlock offshore banking, global financial
+                    access and cross-border growth.
                   </p>
+
+                  <div
+                    className="
+                      mt-3
+                      flex
+                      flex-wrap
+                      gap-2
+                    "
+                  >
+                    {[
+                      "Dubai, UAE",
+                      "Offshore banking",
+                      "Cross-border growth",
+                    ].map((item) => (
+                      <span
+                        key={item}
+                        className="
+                          rounded-full
+                          border
+                          border-white/10
+                          bg-white/[.045]
+                          px-2.5
+                          py-1.5
+                          text-[10px]
+                          font-semibold
+                          leading-none
+                          text-white/70
+
+                          sm:text-[11px]
+                        "
+                      >
+                        {item}
+                      </span>
+                    ))}
+                  </div>
                 </div>
               </div>
             </div>

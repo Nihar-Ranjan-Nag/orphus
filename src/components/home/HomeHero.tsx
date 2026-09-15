@@ -164,11 +164,9 @@ export function HomeHero() {
                 lg:text-[clamp(62px,5.3vw,76px)]
               "
             >
-              Structuring capital,
-              <br />
-              entities and wealth
-              <br />
-              <span className="text-[#59B79E]">across borders.</span>
+              <span className="block">Structuring capital,</span>{" "}
+              <span className="block">entities and wealth</span>{" "}
+              <span className="block text-[#59B79E]">across borders.</span>
             </h1>
 
             {/* COPY */}
@@ -180,7 +178,7 @@ export function HomeHero() {
                 text-[16px]
                 leading-[1.78]
 
-                 text-white/82
+                text-white/82
 
                 min-[390px]:text-[16.5px]
 
@@ -262,12 +260,6 @@ export function HomeHero() {
 
       {/* =====================================================
           TRUST PILLARS
-
-          MOBILE:
-          Compact 2-column and 2-row layout exactly like screenshot.
-
-          DESKTOP:
-          Same horizontal 4-column premium layout with brighter description.
       ===================================================== */}
       <div className="relative z-20 border-t border-white/10 bg-[#061711]">
         <div
@@ -415,7 +407,7 @@ export function HomeHero() {
                         text-[12.5px]
                         leading-[1.55]
 
-                         text-white/56
+                        text-white/56
 
                         md:mt-2
                         md:block

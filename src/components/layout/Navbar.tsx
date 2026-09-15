@@ -624,7 +624,7 @@ export function Navbar() {
           </a>
 
           <Link
-            to="/#contact"
+            to="/contact"
             aria-label="Book a consultation with the Orpheus advisory team"
             className="
               inline-flex
@@ -1111,7 +1111,7 @@ export function Navbar() {
               ================================================= */}
 
               <Link
-                to="/#contact"
+                to="/contact"
                 onClick={() => setOpen(false)}
                 aria-label="Book a consultation with the Orpheus advisory team"
                 className="

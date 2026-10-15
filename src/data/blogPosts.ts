@@ -10,6 +10,170 @@ export interface BlogPost {
 }
 
 export const blogPosts: BlogPost[] = [
+{
+  "slug": "corporate-structuring-and-governance",
+  "title": "Corporate Structuring and Governance: Build It, Then Run It",
+  "excerpt": "A cross-border structure is only as strong as its governance. Learn how to build credible entities and keep filings, registers and renewals on track in the UAE.",
+  "category": "CORPORATE STRUCTURING",
+  "date": "October 6, 2026",
+  "readTime": "9 min read",
+  "author": {
+    "name": "Orpheus Financial",
+    "role": "INSIGHTS",
+    "initials": "OF"
+  },
+  "body": [
+    {
+      "heading": "The email that arrived on a Tuesday",
+      "paragraphs": [
+        "It came from the bank, three years after everything had been set up perfectly.",
+        "“As part of our periodic review, please provide updated ownership documents, board resolutions for the last two financial years, and evidence of the company’s activities. Failure to respond within 30 days may result in restrictions on the account.”",
+        "Let’s call the founder Karim. He is a composite of the people we meet every month, and his story is common enough that you may recognise parts of it.",
+        "Karim had done things properly. A UAE holding company. A free zone trading company beneath it. A separate entity for the family’s Dubai apartment. A lawyer drew the chart, the licences arrived, the bank accounts opened. On paper, it was clean.",
+        "Then life happened. A partner left and his shares were bought back, but nobody updated the register. Board decisions were made on WhatsApp calls from three countries and never written down. A licence renewal slipped by a few weeks. The corporate tax registration was done for one entity and forgotten for another.",
+        "None of it felt urgent. Until the email.",
+        "This article is about the difference between a structure that was built right and one that is run right. The first is corporate structuring. The second is corporate governance. You need both, and most people only pay attention to the first."
+      ]
+    },
+    {
+      "heading": "In short",
+      "paragraphs": [
+        "Corporate structuring is how your companies are arranged: which entities exist, where they sit, and who owns what.",
+        "Corporate governance is how those entities are run every year: decisions, records, filings and renewals.",
+        "Structures rarely fail at setup. They drift afterwards, usually at three moments: the first filing year, the first bank review, and the first big life change.",
+        "In the UAE, every entity carries its own yearly obligations, even an SPV with no staff.",
+        "One owner and one calendar across the whole structure is what keeps it credible to banks, regulators and investors."
+      ]
+    },
+    {
+      "heading": "What is corporate structuring?",
+      "paragraphs": [
+        "Corporate structuring is the way you arrange your companies so that each one has a clear job. One entity trades. Another holds shares. Another owns a property or ring-fences a single deal. Another protects family wealth for the next generation.",
+        "A good structure answers four questions before a single licence is issued:",
+        "1. What is each entity for? Operating, holding, owning an asset, or protecting wealth.",
+        "2. Where should it sit? Chosen for banking access, treaty networks and substance requirements, not the headline tax rate alone.",
+        "3. Who owns and controls it? Ownership lines a bank compliance officer can follow in minutes.",
+        "4. How will it grow? Room for new investors, new assets or new family members without rebuilding everything."
+      ]
+    },
+    {
+      "heading": "What is corporate governance?",
+      "paragraphs": [
+        "Corporate governance is everything that keeps those entities credible after day one. It is the board meeting that gets minuted. The register that is updated when a shareholder changes. The licence renewed before it lapses. The tax return filed for every entity, not just the busy one.",
+        "If structuring is the architecture of a building, governance is the maintenance. Nobody notices it when it is done well. Everybody notices when it is not."
+      ]
+    },
+    {
+      "heading": "Why the two must work together",
+      "paragraphs": [
+        "Regulators, tax authorities and especially banks now judge a structure by how it operates, not just how it was drawn. A beautifully designed group with missing minutes and stale registers looks, to a compliance team, exactly like a structure with something to hide. That is why Karim’s email arrived."
+      ]
+    },
+    {
+      "heading": "The three moments where structures break",
+      "paragraphs": [
+        "Karim’s structure did not fail on one day. It drifted, quietly, through three moments that almost every cross-border business goes through."
+      ]
+    },
+    {
+      "heading": "Moment 1: The first filing year",
+      "paragraphs": [
+        "The excitement of setup fades and the calendar takes over. Each entity now has its own licence renewal, its own corporate tax registration and return, its own accounting records, and sometimes its own audit. They fall due on different dates, sometimes in different countries.",
+        "Karim’s accountant handled the trading company well. The holding company, which had no revenue, slipped through. “It doesn’t do anything, so it doesn’t need anything,” he assumed. In the UAE, that is not how it works: every juridical person registers and files for corporate tax, even with nothing to report.",
+        "The lesson: a quiet entity is not an exempt entity."
+      ]
+    },
+    {
+      "heading": "Moment 2: The first bank review",
+      "paragraphs": [
+        "Banks review corporate clients periodically, and more often when ownership is spread across borders. They want the current shareholder register, the ultimate beneficial owners, recent board resolutions and evidence that the company does what it says it does.",
+        "This is where governance gaps become visible. The partner who left was still on the register. The decisions behind a large transfer were never minuted. The documents no longer matched the structure the bank had approved.",
+        "The lesson: your bank remembers the structure you showed it. Your records need to keep up."
+      ]
+    },
+    {
+      "heading": "Moment 3: The first big life change",
+      "paragraphs": [
+        "A new investor. The sale of a property. A child joining the business. A health scare that makes everyone ask, quietly, what happens next.",
+        "These are the moments a structure is supposed to make easy. Instead, Karim discovered that nobody could say with certainty who controlled what, because the paperwork had stopped at year one.",
+        "The lesson: a structure’s real test is not the day it is created. It is the day something changes."
+      ]
+    },
+    {
+      "heading": "What a well-built structure looks like",
+      "paragraphs": [
+        "Here is the shape Karim’s group should have had from day one, with each entity doing exactly one job.",
+        "Control and succession sit in the foundation, management in the holding company, and risk in separate vehicles. The governance layer underneath is what most groups forget to build."
+      ]
+    },
+    {
+      "heading": "The yearly governance calendar for UAE entities",
+      "paragraphs": [
+        "This is what “running a structure right” looks like in practice. Every line applies per entity, so a group of four companies carries four sets of obligations.",
+        "Rules change, and free zones add their own requirements. The details reflect UAE federal rules as of October 2026 and should be confirmed for each entity."
+      ]
+    },
+    {
+      "heading": "What this looks like across borders",
+      "paragraphs": [
+        "Add a foreign holding company, a BVI vehicle or a family foundation, and each one brings its own registry, its own deadlines and its own regulator. This is where most groups lose the thread: not because any single obligation is hard, but because nobody holds all of them in one place."
+      ]
+    },
+    {
+      "heading": "Governance for families: when the structure has to outlive you",
+      "paragraphs": [
+        "For families, governance has a second job. It is not only about staying compliant. It is about making sure the people you care about inherit clarity instead of confusion.",
+        "Three tools do most of the work:",
+        "A foundation or trust at the top, so ownership does not depend on one person’s estate. A foundation has no shareholders and is governed by its charter and by-laws.",
+        "A written succession plan, covering who takes decisions if the founder cannot, and how shares or benefits pass to the next generation.",
+        "A family charter or shareholder agreement, setting out how family members join the business, how disputes are resolved, and how value is shared.",
+        "None of these work if the entities beneath them are out of date. A foundation that owns a holding company with a stale register is a clear plan sitting on top of an unclear group."
+      ]
+    },
+    {
+      "heading": "How Karim’s story ended",
+      "paragraphs": [
+        "Karim answered the bank, eventually. It took six weeks, two lawyers and a great deal of stress to rebuild three years of missing records.",
+        "Then he did what he should have done on day one. Every entity was mapped on one page, with a clear job. The registers were brought up to date. Past board decisions were properly ratified. One governance calendar now covers every licence, filing and renewal across the group, with one person accountable for it.",
+        "When the next bank review arrived, it took two days.",
+        "The structure did not change much. What changed was that it was finally being run, not just owned."
+      ]
+    },
+    {
+      "heading": "Is your structure running right? A two-minute check",
+      "paragraphs": [
+        "Tick every statement that is true for all your entities:",
+        "Shareholder, director and beneficial owner registers are current.",
+        "Board decisions are minuted where each company is managed.",
+        "Every licence and renewal sits on one calendar.",
+        "Corporate tax returns are filed for every entity, including quiet ones.",
+        "You can show evidence of real activity if a bank asks.",
+        "Bank KYC documents match today’s structure.",
+        "Someone is named as responsible for all of the above.",
+        "All seven: your structure is built to last. Four to six: gaps are forming, and it is cheaper to close them now. Three or fewer: a full governance review is overdue."
+      ]
+    },
+    {
+      "heading": "How Orpheus helps",
+      "paragraphs": [
+        "Orpheus Financial designs cross-border structures and then stays with them. Across 18 jurisdictions, we establish the entities, holding companies and ownership structures that families, investors and businesses need, and we manage the governance, compliance and statutory obligations that keep them credible year after year.",
+        "That means one partner who holds the whole picture: the structure chart, the calendar, the registers and the relationship with your banks.",
+        "Orpheus is also the structuring partner for LuxuryProperty.com Wealth Management, where clients can access global corporate structuring and family office structuring alongside their property, wealth and succession planning.",
+        "Built right. Run right. Request a private review with Orpheus."
+      ]
+    },
+    {
+      "heading": "Frequently asked questions",
+      "paragraphs": []
+    },
+    {
+      "heading": "Disclaimer",
+      "paragraphs": [
+        "This article is for general informational purposes only and does not constitute legal, tax, or financial advice. Regulations are subject to change, and you should consult with a qualified professional regarding your specific corporate structure."
+      ]
+    }
+  ]
+},
   {
     slug: "bvi-vs-seychelles-which-offshore-jurisdiction-is-best",
     title: "BVI Vs Seychelles: Which Offshore Jurisdiction is Best for Your Company?",

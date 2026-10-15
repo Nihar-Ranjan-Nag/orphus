@@ -27,6 +27,7 @@ import {
 import { getPostBySlug } from "@/data/blogPosts";
 import { SmartImage } from "@/components/ui/SmartImage";
 import NotFound from "./NotFound";
+import { GovernanceArticleExtras } from "@/components/blog/GovernanceArticleExtras";
 
 /* =========================================================
    HELPERS
@@ -34,6 +35,7 @@ import NotFound from "./NotFound";
 ========================================================= */
 
 const blogImages: Record<string, string> = {
+  "corporate-structuring-and-governance": "/images/Orpheus_Blog_Header_Governance.jpg",
   "bvi-vs-seychelles-which-offshore-jurisdiction-is-best":
     "/images/bvi.jpg",
 
@@ -1360,6 +1362,10 @@ export default function BlogPostPage() {
                       )
                     )}
                   </div>
+
+                  {post.slug === "corporate-structuring-and-governance" && (
+                    <GovernanceArticleExtras heading={section.heading} />
+                  )}
 
                   {/* DIVIDER */}
 

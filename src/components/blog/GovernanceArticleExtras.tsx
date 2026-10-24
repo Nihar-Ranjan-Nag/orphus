@@ -38,6 +38,5 @@ export function GovernanceArticleExtras({ heading }: { heading: string }) {
   if (heading === "Frequently asked questions") return (
     <div className="mt-6 space-y-3">{governanceFaqs.map((item, idx) => <details key={item.question} className="group rounded-xl border border-[#DDE5DB] bg-[#FAFAF7] px-5 py-4" open={idx===0}><summary className="cursor-pointer list-item font-semibold text-[#173E33]">{item.question}</summary><p className="mt-3 text-sm leading-7 text-[#53665B]">{item.answer}</p></details>)}</div>
   );
-  if (heading === "How Orpheus helps") return <div className="mt-7 rounded-2xl bg-[#103B31] p-6 text-white sm:p-8"><p className="text-xs font-semibold uppercase tracking-widest text-[#D7BA65]">Built right. Run right.</p><h3 className="mt-3 font-serif text-2xl">Request a private governance review</h3><p className="mt-2 text-sm leading-6 text-[#DDE8E0]">Discuss corporate structures, annual obligations and succession planning with Orpheus Financial.</p><Link to="/contact" className="mt-5 inline-flex rounded-full bg-[#D6B35A] px-6 py-3 font-semibold text-[#102F27] hover:bg-[#E4C77E]">Contact Orpheus →</Link></div>;
-  return null;
+ if (heading === "How Orpheus helps") return null;  return null;
 }

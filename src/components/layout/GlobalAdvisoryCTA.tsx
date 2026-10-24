@@ -1,3 +1,4 @@
+
 import { useLocation } from "react-router-dom";
 
 import { AdvisoryCTA } from "@/components/AdvisoryCTA";
@@ -10,9 +11,14 @@ export function GlobalAdvisoryCTA() {
     "/contact",
     "/404",
     "/services",
+    "/blog",
+    "/insights",
   ];
 
-  if (hiddenRoutes.includes(pathname)) {
+  const normalizedPath =
+    pathname.replace(/\/+$/, "") || "/";
+
+  if (hiddenRoutes.includes(normalizedPath)) {
     return null;
   }
 

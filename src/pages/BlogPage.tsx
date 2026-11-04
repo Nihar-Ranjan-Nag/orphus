@@ -780,7 +780,32 @@ export default function BlogPage() {
         )}
 
       {/* ==========================================
-          SECTION 3 — INSIGHTS LIBRARY
+          SECTION 3 — UAE COMPANY LAW ARTICLE
+          DIRECTLY BELOW LATEST UPDATES
+      ========================================== */}
+
+      <section
+        id="uae-company-law-section"
+        aria-label="UAE Company Law Amendments"
+        className="
+          min-w-0 scroll-mt-28 bg-[#F8F6F0]
+          py-10 sm:py-12 lg:py-14
+        "
+      >
+        <div
+          className="
+            mx-auto w-full max-w-[1320px]
+            px-5 sm:px-7 lg:px-10 xl:px-12
+            [&_img]:max-w-full [&_img]:h-auto
+            [&_table]:max-w-full
+          "
+        >
+          <UAELawArticle />
+        </div>
+      </section>
+
+      {/* ==========================================
+          SECTION 4 — INSIGHTS LIBRARY
       ========================================== */}
 
       <section
@@ -1037,26 +1062,6 @@ export default function BlogPage() {
               No insights are available in this category.
             </div>
           )}
-
-          {/* ==========================================
-              SECTION 4 — UAE COMPANY LAW ARTICLE
-              NO DUPLICATE FAQs
-          ========================================== */}
-
-          <section
-            id="uae-company-law-section"
-            aria-label="UAE Company Law Amendments"
-            className="
-              mt-12 min-w-0 scroll-mt-28
-              border-t border-[#D7DED9] pt-10
-              sm:mt-16 sm:pt-12
-              [&_img]:max-w-full
-              [&_img]:h-auto
-              [&_table]:max-w-full
-            "
-          >
-            <UAELawArticle />
-          </section>
 
           {/* ==========================================
               SECTION 5 — GOVERNANCE ARTICLE

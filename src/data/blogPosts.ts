@@ -169,7 +169,7 @@ export const blogPosts: BlogPost[] = [
     {
       "heading": "Disclaimer",
       "paragraphs": [
-        "This article is for general informational purposes only and does not constitute legal, tax, or financial advice. Regulations are subject to change, and you should consult with a qualified professional regarding your specific corporate structure."
+        "This article is for general information and education only and does not constitute legal, tax, financial or investment advice. It reflects our understanding of the law as at 30 October 2026. UAE laws, implementing regulations and authority guidance may change, and how they apply depends on your company's legal form, licensing authority and circumstances. Take independent advice from a qualified UAE lawyer before restructuring a company, amending constitutional documents, transferring shares or entering a transaction. Orpheus Financial is not a law firm and does not provide legal services."
       ]
     }
   ]

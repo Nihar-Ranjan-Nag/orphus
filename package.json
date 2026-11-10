@@ -10,7 +10,9 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "build:seo:test": "vite build --outDir /home/ubuntu/orpheus-seo-test-build --emptyOutDir && node scripts/generate-seo.mjs /home/ubuntu/orpheus-seo-test-build",
+    "build:seo": "vite build && node scripts/generate-seo.mjs dist"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",

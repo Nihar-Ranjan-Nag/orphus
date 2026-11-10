@@ -1,3 +1,4 @@
+import SeoManager from "./components/SeoManager";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import React, { Suspense, useEffect } from "react";
 import {
@@ -200,6 +201,7 @@ const App = () => {
 
         <BrowserRouter>
           <ScrollManager />
+          <SeoManager />
 
           <Navbar />
 

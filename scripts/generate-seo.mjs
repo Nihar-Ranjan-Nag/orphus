@@ -190,6 +190,124 @@ const allURLs = [...pages.keys()].map(
   route => BASE + route
 );
 
+
+function buildStructuredData(route) {
+  const url = BASE + route;
+  const page = pages.get(route);
+  const nodes = [];
+
+  const post = blogPosts.find(
+    item => route === `/blog/${item.slug}`
+  );
+
+  const capability = capabilityServices.find(
+    item => route === `/services/capability/${item.slug}`
+  );
+
+  const serviceBucket = serviceBuckets.find(
+    item => route === `/services/${item.slug}`
+  );
+
+  if (post) {
+    const article = {
+      "@type": "BlogPosting",
+      "@id": `${url}#article`,
+      "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": url
+      },
+      "headline": post.title,
+      "description": post.excerpt,
+      "url": url,
+      "author": {
+        "@type": post.author.name === "Orpheus Financial"
+          ? "Organization"
+          : "Person",
+        "name": post.author.name
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "Orpheus Financial",
+        "url": BASE + "/"
+      }
+    };
+
+    const published = new Date(post.date);
+
+    if (!Number.isNaN(published.getTime())) {
+      article.datePublished =
+        published.toISOString().slice(0, 10);
+    }
+
+    nodes.push(article);
+  }
+
+  const service = capability || serviceBucket;
+
+  if (service) {
+    nodes.push({
+      "@type": "Service",
+      "@id": `${url}#service`,
+      "name": service.title,
+      "serviceType": service.title,
+      "description":
+        service.description || service.summary,
+      "url": url,
+      "provider": {
+        "@type": "Organization",
+        "name": "Orpheus Financial",
+        "url": BASE + "/"
+      }
+    });
+  }
+
+  if (route !== "/") {
+    const items = [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": BASE + "/"
+      }
+    ];
+
+    let parentRoute = null;
+    let parentName = null;
+
+    if (route.startsWith("/blog/")) {
+      parentRoute = "/blog";
+      parentName = "Blog";
+    } else if (route.startsWith("/services/")) {
+      parentRoute = "/services";
+      parentName = "Services";
+    }
+
+    if (parentRoute) {
+      items.push({
+        "@type": "ListItem",
+        "position": items.length + 1,
+        "name": parentName,
+        "item": BASE + parentRoute
+      });
+    }
+
+    items.push({
+      "@type": "ListItem",
+      "position": items.length + 1,
+      "name": page.title.split(" | ")[0],
+      "item": url
+    });
+
+    nodes.push({
+      "@type": "BreadcrumbList",
+      "@id": `${url}#breadcrumb`,
+      "itemListElement": items
+    });
+  }
+
+  return nodes;
+}
+
 let generated = 0;
 
 for (const url of allURLs) {
@@ -238,6 +356,20 @@ for (const url of allURLs) {
     ["name", "twitter:description", page.description],
   ]) {
     html = replaceMeta(html, attr, name, value);
+  }
+
+  const schemaNodes = buildStructuredData(route);
+
+  if (schemaNodes.length) {
+    const schemaJSON = JSON.stringify({
+      "@context": "https://schema.org",
+      "@graph": schemaNodes
+    }).replace(/</g, "\\u003c");
+
+    html = html.replace(
+      "</head>",
+      `  <script type="application/ld+json">${schemaJSON}</script>\n</head>`
+    );
   }
 
   if (!html.includes("G-1H2WHS7E70")) {

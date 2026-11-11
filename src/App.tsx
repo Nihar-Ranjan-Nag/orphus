@@ -192,14 +192,22 @@ const LoadingFallback = () => (
   </div>
 );
 
-const App = () => {
+type AppProps = {
+  Router?: React.ComponentType<any>;
+  routerProps?: Record<string, unknown>;
+};
+
+const App = ({
+  Router = BrowserRouter,
+  routerProps = {},
+}: AppProps = {}) => {
   return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
         <Toaster />
         <Sonner />
 
-        <BrowserRouter>
+        <Router {...routerProps}>
           <ScrollManager />
           <SeoManager />
 
@@ -263,7 +271,7 @@ const App = () => {
 
           <GlobalAdvisoryCTA />
           <Footer />
-        </BrowserRouter>
+        </Router>
       </TooltipProvider>
     </QueryClientProvider>
   );

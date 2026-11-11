@@ -1049,64 +1049,7 @@ export default function ContactPage() {
           No shared card hover/top accent inside map area
       ====================================================== */}
       <div className="contact-map-clean">
-        <style>{`
-          /* Remove inherited card accent/hover from the map section */
-          .contact-map-clean .site-card::before,
-          .contact-map-clean .site-card::after {
-            display: none !important;
-            content: none !important;
-          }
 
-          .contact-map-clean .site-card:hover {
-            transform: none !important;
-            box-shadow: inherit !important;
-          }
-
-          /* Remove the excessive empty space above the map */
-          .contact-map-clean > section {
-            padding-top: 28px !important;
-            padding-bottom: 42px !important;
-          }
-
-          .contact-map-clean > section > div {
-            margin-top: 0 !important;
-          }
-
-          /* Keep heading/content compact */
-          .contact-map-clean h2 {
-            margin-top: 8px !important;
-          }
-
-          .contact-map-clean p {
-            margin-bottom: 0 !important;
-          }
-
-          /* Make the actual Google map clearly visible */
-          .contact-map-clean iframe {
-            display: block !important;
-            width: 100% !important;
-            height: 430px !important;
-            min-height: 430px !important;
-            border: 0 !important;
-          }
-
-          .contact-map-clean [class*="aspect-"] {
-            min-height: 430px !important;
-          }
-
-          @media (max-width: 767px) {
-            .contact-map-clean > section {
-              padding-top: 22px !important;
-              padding-bottom: 28px !important;
-            }
-
-            .contact-map-clean iframe,
-            .contact-map-clean [class*="aspect-"] {
-              height: 330px !important;
-              min-height: 330px !important;
-            }
-          }
-        `}</style>
 
         <GoogleMapsSection />
       </div>

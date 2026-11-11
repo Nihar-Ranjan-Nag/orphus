@@ -40,7 +40,7 @@ export default function GovernanceCompactPage({ post }: Props) {
               </div>
             </div>
             <div className="overflow-hidden rounded-2xl border border-[#D6DCD5] bg-[#14221C] shadow-sm">
-              <img src="/images/Orpheus_Blog_Header_Governance.jpg" alt="Architectural tower model in gold lighting representing corporate structuring and governance" className="aspect-[16/9] w-full object-cover" />
+              <img src="/images/orpheus-governance-hero.jpg" alt="Architectural tower model in gold lighting representing corporate structuring and governance" className="aspect-[16/9] w-full object-cover" />
             </div>
           </div>
         </div>

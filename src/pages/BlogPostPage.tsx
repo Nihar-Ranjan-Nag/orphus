@@ -35,7 +35,7 @@ import { GovernanceArticleExtras } from "@/components/blog/GovernanceArticleExtr
 ========================================================= */
 
 const blogImages: Record<string, string> = {
-  "corporate-structuring-and-governance": "/images/Orpheus_Blog_Header_Governance.jpg",
+  "corporate-structuring-and-governance": "/images/orpheus-governance-hero.jpg",
   "bvi-vs-seychelles-which-offshore-jurisdiction-is-best":
     "/images/bvi.jpg",
 

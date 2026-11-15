@@ -6,10 +6,243 @@ export interface BlogPost {
   date: string;
   readTime: string;
   author: { name: string; role: string; initials: string };
-  body: { heading: string; paragraphs: string[] }[];
+  publishedAt?: string;
+  seoTitle?: string;
+  seoDescription?: string;
+  intro?: string[];
+  body: {
+    heading: string;
+    paragraphs: string[];
+    figures?: { afterParagraph: number; src: string; alt: string; caption?: string }[];
+    tables?: { afterParagraph: number; caption?: string; headers: string[]; rows: string[][] }[];
+  }[];
 }
 
 export const blogPosts: BlogPost[] = [
+{
+  "slug": "mena-startup-funding-october-2026",
+  "title": "MENA startup funding fell 96% in October. The number is right, and almost every conclusion drawn from it is wrong.",
+  "excerpt": "MENA startups raised about $40 million in October 2026. The 96% monthly decline hides a deeper story about deal timing, early-stage capital, and the UAE’s divergence.",
+  "category": "MARKET INSIGHTS",
+  "date": "November 14, 2026",
+  "publishedAt": "2026-11-14",
+  "readTime": "10 min read",
+  "seoTitle": "MENA Startup Funding October 2026: What the 96% Fall Shows",
+  "seoDescription": "MENA startup funding fell 96% to $40 million in October 2026. The comparison reflects two unusual months, not necessarily a collapse. Explore the UAE divergence and 2027 implications.",
+  "author": {
+    "name": "Rachit Yadav",
+    "role": "FOUNDER & CEO",
+    "initials": "RY"
+  },
+  "intro": [
+    "Thirty-two startups across the Middle East and North Africa raised money in October 2026. Between them they raised about $40 million.",
+    "September closed at $1.1 billion. That is a fall of 96% in a single month, and 95% against October 2025, which came in at $784.9 million. The figure has run this week in Forbes Middle East, Zawya, Enterprise and most of the regional trade press, and the framing has been consistent: the regional funding market has collapsed.",
+    "The number is accurate. The framing is not, and the reason is visible in the same dataset everyone is quoting.",
+    "This piece sets out what the October data actually shows, what it does not show, and what follows from it if you are raising capital, allocating it, or deciding how a structure should be built before you do either."
+  ],
+  "body": [
+    {
+      "heading": "First, what the 96% is actually measuring",
+      "paragraphs": [
+        "A percentage change compares two points. If either point is unusual, the percentage tells you about the unusual point rather than about the trend.",
+        "Both points here are unusual.",
+        "September's $1.1 billion was not a broad month. Three Saudi-linked transactions, Barq, Tabby and Lendo, accounted for about $762.5 million between them. That is roughly 69% of the entire region's September total sitting in three deals. One of those three, Lendo's $200 million, was a debt programme rather than an equity round, so it would not appear at all in a strict venture funding count.",
+        "October was unusual in the opposite direction. There was not a single megadeal and not a single later-stage round in the entire region. Not a small number. None.",
+        "So the 96% is the distance between a month inflated by three exceptional transactions and a month with no large transactions at all. Neither month is the baseline. Comparing them produces a dramatic number that describes the variance in large-deal timing, not a change in the underlying market.",
+        "This matters because the conclusion people are drawing, that capital has left the region, is a different claim, and the data contradicts it."
+      ]
+    },
+    {
+      "heading": "The number that actually tells you what happened",
+      "paragraphs": [
+        "Funding fell 96%. Deal count fell 56%, from 73 transactions to 32.",
+        "If capital had genuinely withdrawn from the region, those two figures would have moved together. Investors would have stopped writing cheques, and both the count and the total would have fallen at similar rates. Instead the total fell roughly twenty-four times faster than the count.",
+        "That gap is the story, and it has a single explanation. The money that disappeared was concentrated in a small number of large cheques. The large number of small cheques carried on.",
+        "The stage breakdown confirms it directly:",
+        "Early stage took 84% of all the capital deployed in the region and 75% of all the deals. Seed and pre-seed behaved more or less as they had been behaving. Everything above them stopped.",
+        "October was not a funding crisis. It was a month in which the top of the market did not transact and the bottom of the market did."
+      ],
+      "figures": [
+        {
+          "afterParagraph": 1,
+          "src": "/images/Blog_Hero_TwoNumbers.png",
+          "alt": "September to October 2026: MENA deal count fell 56 percent while total funding fell 96 percent.",
+          "caption": "Funding and deal counts indexed to 100 in September 2026."
+        }
+      ],
+      "tables": [
+        {
+          "afterParagraph": 3,
+          "caption": "October 2026 disclosed funding by stage (source: Wamda).",
+          "headers": [
+            "Stage",
+            "Amount",
+            "Deals"
+          ],
+          "rows": [
+            [
+              "Early stage",
+              "$33.7m",
+              "24"
+            ],
+            [
+              "Later stage",
+              "None",
+              "0"
+            ],
+            [
+              "Debt",
+              "$550k",
+              "1"
+            ],
+            [
+              "Undisclosed stage",
+              "$5.7m",
+              "7"
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "heading": "How concentrated a $40 million month really is",
+      "paragraphs": [
+        "One figure makes the scale clear better than any percentage.",
+        "Autobia, a Saudi company, raised a $12 million Series A in October. That single round was nearly two thirds of Saudi Arabia's entire monthly total and roughly 30% of everything raised across the Middle East and North Africa that month, in every country, across all 32 deals.",
+        "When one round is 30% of a region, the regional figure has stopped being a measure of the region. It has become a measure of whether one or two companies happened to close in that particular four-week window.",
+        "This is worth holding on to whenever you read a monthly funding number from anywhere. In a market this size, the monthly figure is dominated by deal timing. A round that closes on 2 November instead of 29 October moves the headline by tens of percentage points without anything in the real economy having changed."
+      ],
+      "figures": [
+        {
+          "afterParagraph": 1,
+          "src": "/images/Blog_Chart_Concentration.png",
+          "alt": "Autobia raised 12 million dollars, 30 percent of all 40 million dollars of October MENA funding.",
+          "caption": "Autobia’s $12m round represented roughly 30% of disclosed October funding."
+        }
+      ]
+    },
+    {
+      "heading": "Where the money went, and the divergence nobody is discussing",
+      "paragraphs": [
+        "The country breakdown shows where October’s disclosed funding went:",
+        "Saudi Arabia took 47% of a very small pie, and almost two thirds of its total came from the single Autobia round. Qatar's third place came from one $5 million transaction, which says more about the size of the month than about Qatar. Egypt's six deals averaged under $300,000 each, against a September in which Paymob's $35 million round alone carried the country to $49.2 million.",
+        "The UAE did more deals than any other country in the region, ten, and raised less money than Saudi Arabia. More transactions, smaller cheques. That is exactly what a market with an open bottom and a closed top looks like from the inside.",
+        "Now widen the lens, because this is where the month stops being noise and starts being informative. On Magnitt's figures for the first nine months of 2026:",
+        "• United Arab Emirates: about $1.6 billion, up 17% year on year.",
+        "• Saudi Arabia: about $1 billion, down 29% year on year.",
+        "• Egypt: about $206 million, down 20% year on year.",
+        "The UAE is the only one of the three growing, and it is growing while its two largest regional peers contract by double digits. A single weak October does not touch that. If anything, October is a reminder that monthly figures and nine-month figures answer completely different questions, and only one of them is worth planning against."
+      ],
+      "figures": [
+        {
+          "afterParagraph": 6,
+          "src": "/images/Blog_Chart_UAEDivergence.png",
+          "alt": "UAE funding increased 17 percent year over year, Saudi Arabia decreased 29 percent and Egypt decreased 20 percent for the first nine months of 2026.",
+          "caption": "First nine months of 2026 compared with the same period in 2025 (source: MAGNiTT)."
+        }
+      ],
+      "tables": [
+        {
+          "afterParagraph": 0,
+          "caption": "October 2026 regional funding by country (source: Wamda).",
+          "headers": [
+            "Country",
+            "Startups",
+            "Raised"
+          ],
+          "rows": [
+            [
+              "Saudi Arabia",
+              "9",
+              "$18.8m"
+            ],
+            [
+              "United Arab Emirates",
+              "10",
+              "$12.9m"
+            ],
+            [
+              "Qatar",
+              "1",
+              "$5.0m"
+            ],
+            [
+              "Egypt",
+              "6",
+              "$1.7m"
+            ],
+            [
+              "Kuwait",
+              "2",
+              "$650k"
+            ],
+            [
+              "Jordan",
+              "1",
+              "$560k"
+            ],
+            [
+              "Syria",
+              "3",
+              "$365k"
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "heading": "The year, in proportion",
+      "paragraphs": [
+        "Across the first ten months of 2026 the region raised roughly $3.4 billion. For context, 2025 closed at a record $7.5 billion.",
+        "At the 2026 pace, ten months at $3.4 billion, the year lands somewhere near $4.1 billion. That is a calculation, not a forecast, and November and December can move it considerably in either direction, particularly if one or two large rounds close. But it frames October correctly: a month that contributed 1.2% of the year's funding in 10% of the year's time.",
+        "One month like that changes very little. Two or three in a row would change the annual picture materially. That is the thing to watch, and it is not answerable yet."
+      ]
+    },
+    {
+      "heading": "Two further patterns in the October data",
+      "paragraphs": [
+        "Capital moved decisively towards contracted revenue. B2B businesses took $34.3 million across 21 deals, about 86% of the month's total. When capital gets scarce or selective, it moves towards businesses with signed customers and predictable revenue rather than businesses still proving demand. October is a clean example of that behaviour rather than an exception to it.",
+        "The founder gender split was close to total. Startups with female or mixed-gender founding teams raised $200,000 across two rounds, around 0.5% of the month. In a month this small, one round landing differently would move that ratio substantially, so the figure is partly an artefact of sample size and should not be read as a step change on its own. It is the kind of number worth tracking across a full quarter rather than drawing a conclusion from in a single month."
+      ]
+    },
+    {
+      "heading": "What this means if you are raising",
+      "paragraphs": [
+        "The practical read is narrower than the headline and more useful.",
+        "The early-stage market was open in October. Twenty-four early-stage rounds closed. If you are raising a seed or pre-seed round, October gives you no reason to delay, and the headline gives you no information about your own prospects.",
+        "The growth market was not open. No later-stage round closed anywhere in the region. If you are raising a Series B or later, you are not reading a market signal, you are reading a timing signal, and those require completely different responses. A timing problem is solved by runway and preparation. A market problem is solved by changing what you are building. Confusing the two is expensive in both directions.",
+        "Be careful what you conclude from one month. Anyone telling you in November whether October was a gap or a turn is guessing. The variable that answers it is whether later-stage rounds return, and that becomes visible in the first half of a month rather than the second."
+      ]
+    },
+    {
+      "heading": "What it means for how you are structured",
+      "paragraphs": [
+        "There is a second-order consequence that tends to get missed, and it is the reason we track this data rather than simply reading about it.",
+        "When growth capital pauses and then returns, it does not return on the same terms. A quieter market makes institutional allocators more selective, not less, and selectivity shows up first in diligence rather than in valuation. The thesis conversation happens early and quickly. The part that kills transactions happens later and quietly, in the review of the corporate chart.",
+        "Institutional capital has mandates that dictate what it is permitted to wire money into. Where a vehicle does not meet those tests, there is no negotiation, because the allocator has no authority to negotiate. The three things examined before anything else are consistent: whether each fund or deal is properly segregated in its own vehicle rather than commingled with operating risk, whether ownership can be traced to ultimate beneficial owners from the documents alone, and whether the manager meets the regulatory tier it is actually operating at with genuine substance behind it.",
+        "None of those is exotic. All of them are difficult to retrofit while a raise is live.",
+        "Which makes a quiet period the useful period. If you intend to raise institutional capital in 2027, the architecture work belongs in the quarter when nobody is reading your data room, not in the quarter when everybody is. A structure built for commercial trade will pass unnoticed for years and fail the first institutional review it meets, and it will fail it at the worst possible moment.",
+        "October was a slow month for transactions. It is not a slow month for preparation."
+      ]
+    },
+    {
+      "heading": "What we are watching in November and December",
+      "paragraphs": [
+        "One variable above all others: whether later-stage rounds return. That single question decides whether October reads as a timing gap or as the start of a change in the market, and nothing else in the data answers it.",
+        "Secondary: whether the UAE's year-on-year growth holds through the fourth quarter while Saudi Arabia and Egypt continue to contract. If it does, the divergence stops being a nine-month artefact and starts being a structural feature of where regional capital is choosing to sit.",
+        "We publish this analysis monthly in The Count. Numbers only, sources named, no predictions."
+      ]
+    },
+    {
+      "heading": "Sources and method",
+      "paragraphs": [
+        "Monthly funding figures, deal counts, stage, country, sector and founder breakdowns: Wamda, November 2026, as reported for October 2026 and corroborated by Forbes Middle East and Enterprise. Nine-month country figures for the UAE, Saudi Arabia and Egypt: Magnitt, as cited in the same reporting.",
+        "All figures are disclosed rounds only. Undisclosed rounds are excluded throughout, which means actual regional totals are higher than the published figures by an unknown amount. The annualised 2026 estimate in this piece is simple arithmetic on the ten-month total and is identified as such rather than presented as a forecast.",
+        "This article is general information on regional funding activity and corporate structuring. It is not investment, legal, regulatory or financial advice, it does not create an advisory relationship, and it may not reflect your circumstances. Obtain advice specific to your business before acting on anything in it."
+      ]
+    }
+  ]
+},
 {
   "slug": "corporate-structuring-and-governance",
   "title": "Corporate Structuring and Governance: Build It, Then Run It",

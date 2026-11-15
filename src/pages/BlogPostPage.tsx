@@ -35,6 +35,7 @@ import { GovernanceArticleExtras } from "@/components/blog/GovernanceArticleExtr
 ========================================================= */
 
 const blogImages: Record<string, string> = {
+  "mena-startup-funding-october-2026": "/images/Blog_Hero_TwoNumbers.png",
   "corporate-structuring-and-governance": "/images/Orpheus_Blog_Header_Governance.jpg",
   "bvi-vs-seychelles-which-offshore-jurisdiction-is-best":
     "/images/bvi.jpg",
@@ -212,6 +213,66 @@ export default function BlogPostPage() {
       triggers.forEach((trigger) =>
         trigger.kill()
       );
+  }, [post]);
+
+  /* Article metadata is updated on route transitions. For unfurled OG tags
+     and full crawler compatibility, use prerendering/SSR in deployment. */
+  useEffect(() => {
+    if (!post) return;
+    const url = `https://orpheusfinancial.co/blog/${post.slug}`;
+    const title = post.seoTitle || `${post.title} | Orpheus Financial`;
+    const description = post.seoDescription || post.excerpt;
+    const imageUrl = `https://orpheusfinancial.co${getArticleImage(post.slug)}`;
+    const previousTitle = document.title;
+    const touched: Array<() => void> = [];
+
+    function updateMeta(selector: string, attribute: string, content: string) {
+      let element = document.head.querySelector<HTMLMetaElement>(selector);
+      const created = !element;
+      if (!element) {
+        element = document.createElement("meta");
+        element.setAttribute(attribute, selector.includes("property=")
+          ? selector.match(/property="([^"]+)"/)?.[1] || ""
+          : selector.match(/name="([^"]+)"/)?.[1] || "");
+        document.head.appendChild(element);
+      }
+      const target = element;
+      const previous = target.getAttribute("content");
+      target.setAttribute("content", content);
+      touched.push(() => {
+        if (created) target.remove();
+        else if (previous === null) target.removeAttribute("content");
+        else target.setAttribute("content", previous);
+      });
+    }
+
+    document.title = title;
+    updateMeta('meta[name="description"]', 'name', description);
+    updateMeta('meta[property="og:type"]', 'property', 'article');
+    updateMeta('meta[property="og:title"]', 'property', title);
+    updateMeta('meta[property="og:description"]', 'property', description);
+    updateMeta('meta[property="og:url"]', 'property', url);
+    updateMeta('meta[property="og:image"]', 'property', imageUrl);
+    updateMeta('meta[name="twitter:title"]', 'name', title);
+    updateMeta('meta[name="twitter:description"]', 'name', description);
+    updateMeta('meta[name="twitter:image"]', 'name', imageUrl);
+    let canonical = document.head.querySelector<HTMLLinkElement>('link[rel="canonical"]');
+    const newCanonical = !canonical;
+    if (!canonical) {
+      canonical = document.createElement('link');
+      canonical.rel = 'canonical';
+      document.head.appendChild(canonical);
+    }
+    const previousHref = canonical.href;
+    canonical.href = url;
+    touched.push(() => {
+      if (newCanonical) canonical?.remove();
+      else if (canonical) canonical.href = previousHref;
+    });
+    return () => {
+      document.title = previousTitle;
+      touched.reverse().forEach(revert => revert());
+    };
   }, [post]);
 
   if (!post) {
@@ -633,13 +694,13 @@ export default function BlogPostPage() {
               <SmartImage
                 src={heroImage}
                 alt={post.title}
-                className="
+                className={`
                   h-full
                   w-full
 
-                  object-cover
+                  ${post.slug === "mena-startup-funding-october-2026" ? "object-contain bg-[#0B0B0B]" : "object-cover"}
                   object-center
-                "
+                `}
               />
 
               <div
@@ -1236,11 +1297,25 @@ export default function BlogPostPage() {
                     md:text-[21px]
                   "
                 >
-                  Good structuring starts with the commercial objective,
-                  not the jurisdiction, bank or product.
+                  {post.slug === "mena-startup-funding-october-2026"
+                    ? "The number is accurate. The framing is not."
+                    : "Good structuring starts with the commercial objective, not the jurisdiction, bank or product."}
                 </p>
               </div>
             </div>
+
+            {post.intro && post.intro.length > 0 && (
+              <div className="mb-10 space-y-4 sm:mb-12 sm:space-y-5">
+                {post.intro.map((paragraph, i) => (
+                  <p
+                    key={i}
+                    className="break-words text-[16px] leading-[1.8] text-[#4F5F59] sm:text-[17px] md:text-[18px] md:leading-[1.85]"
+                  >
+                    {paragraph}
+                  </p>
+                ))}
+              </div>
+            )}
 
             {/* =================================================
                 ARTICLE SECTIONS
@@ -1332,35 +1407,42 @@ export default function BlogPostPage() {
                       sm:space-y-5
                     "
                   >
-                    {section.paragraphs.map(
-                      (
-                        paragraph,
-                        paragraphIndex
-                      ) => (
-                        <p
-                          key={paragraphIndex}
-                          className="
-                            w-full
-                            min-w-0
-
-                            break-words
-
-                            text-[16px]
-
-                            leading-[1.8]
-
-                            text-[#4F5F59]
-
-                            sm:text-[17px]
-
-                            md:text-[18px]
-                            md:leading-[1.85]
-                          "
-                        >
+                    {section.paragraphs.map((paragraph, paragraphIndex) => (
+                      <div key={paragraphIndex} className="min-w-0">
+                        <p className="w-full min-w-0 break-words text-[16px] leading-[1.8] text-[#4F5F59] sm:text-[17px] md:text-[18px] md:leading-[1.85]">
                           {paragraph}
                         </p>
-                      )
-                    )}
+                        {section.tables?.filter(table => table.afterParagraph === paragraphIndex).map((table, tableIndex) => (
+                          <figure key={`table-${paragraphIndex}-${tableIndex}`} className="my-7 max-w-full">
+                            <div className="w-full max-w-full overflow-x-auto rounded-xl border border-[#DAE3DC]" role="region" aria-label={table.caption || 'Funding table'} tabIndex={0}>
+                              <table className="w-full min-w-[390px] border-collapse text-left text-[13px] sm:text-[15px]">
+                                <thead className="bg-[#0B5345] text-white">
+                                  <tr>{table.headers.map(label => (
+                                    <th key={label} scope="col" className="whitespace-nowrap px-3 py-3 font-semibold sm:px-5">{label}</th>
+                                  ))}</tr>
+                                </thead>
+                                <tbody>{table.rows.map((row, i) => (
+                                  <tr key={i} className="border-t border-[#E2E8E2] even:bg-[#F8F8F5]">
+                                    {row.map((cell, j) => j === 0 ? (
+                                      <th key={j} scope="row" className="px-3 py-3 font-medium text-[#13352D] sm:px-5">{cell}</th>
+                                    ) : (
+                                      <td key={j} className="whitespace-nowrap px-3 py-3 text-[#475951] sm:px-5">{cell}</td>
+                                    ))}
+                                  </tr>
+                                ))}</tbody>
+                              </table>
+                            </div>
+                            {table.caption && <figcaption className="mt-2 text-xs leading-5 text-[#64736D]">{table.caption}</figcaption>}
+                          </figure>
+                        ))}
+                        {section.figures?.filter(figure => figure.afterParagraph === paragraphIndex).map((figure, figureIndex) => (
+                          <figure key={`figure-${paragraphIndex}-${figureIndex}`} className="my-7 w-full min-w-0 overflow-hidden sm:my-9">
+                            <img src={figure.src} alt={figure.alt} loading="lazy" decoding="async" className="h-auto w-full rounded-xl bg-[#0B0B0B] object-contain" />
+                            {figure.caption && <figcaption className="mt-2 text-xs leading-5 text-[#64736D] sm:text-sm">{figure.caption}</figcaption>}
+                          </figure>
+                        ))}
+                      </div>
+                    ))}
                   </div>
 
                   {post.slug === "corporate-structuring-and-governance" && (

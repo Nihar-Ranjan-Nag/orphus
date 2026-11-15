@@ -22,6 +22,7 @@ import UAELawArticle from "@/components/blog/UAELawArticle";
 ============================================== */
 
 const blogImages: Record<string, string> = {
+  "mena-startup-funding-october-2026": "/images/Blog_Hero_TwoNumbers.png",
   "bvi-vs-seychelles-which-offshore-jurisdiction-is-best":
     "/images/bvi.jpg",
 
@@ -956,11 +957,12 @@ export default function BlogPage() {
                     <SmartImage
                       src={getPostImage(post.slug)}
                       alt={post.title}
-                      className="
-                        h-full w-full object-cover
+                      className={`
+                        h-full w-full
+                        ${post.slug === "mena-startup-funding-october-2026" ? "object-contain bg-[#0B0B0B]" : "object-cover"}
                         transition-transform duration-700
                         group-hover/card:scale-[1.035]
-                      "
+                      `}
                     />
 
                     <span

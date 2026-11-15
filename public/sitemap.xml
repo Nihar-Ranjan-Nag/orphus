@@ -177,4 +177,9 @@
   <url>
     <loc>https://orpheusfinancial.co/services/private-wealth</loc>
   </url>
+  <url>
+    <loc>https://orpheusfinancial.co/blog/mena-startup-funding-october-2026</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
 </urlset>

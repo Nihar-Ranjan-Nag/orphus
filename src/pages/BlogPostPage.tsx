@@ -1,1817 +1,500 @@
+import { useEffect, useRef, useState } from "react";
 import {
   ArrowLeft,
   ArrowRight,
+  ArrowUp,
+  BookOpen,
+  CalendarDays,
   Clock3,
-  Mail,
-  Quote,
+  List,
   Linkedin,
+  UserRound,
 } from "lucide-react";
-
-import {
-  Link,
-  useParams,
-} from "react-router-dom";
-
-import {
-  useEffect,
-  useRef,
-  useState,
-} from "react";
-
-import {
-  gsap,
-  ScrollTrigger,
-  setupGsap,
-} from "@/lib/gsapSetup";
-
+import { Link, useParams } from "react-router-dom";
 import { getPostBySlug } from "@/data/blogPosts";
 import { SmartImage } from "@/components/ui/SmartImage";
-import NotFound from "./NotFound";
 import { GovernanceArticleExtras } from "@/components/blog/GovernanceArticleExtras";
-
-/* =========================================================
-   HELPERS
-   Each blog slug maps to its own local image.
-========================================================= */
+import NotFound from "./NotFound";
+/**
+ * ORPHEUS FINANCIAL — Inline Numbered Article Timeline
+ * All content is rendered on one page. Jump navigation uses real anchors,
+ * there are no accordions, nested scrollbars, or duplicated article text.
+ * Only existing blog data is used; nothing is shortened or removed.
+ */
 
 const blogImages: Record<string, string> = {
+  "private-banking-for-founders-in-uae": "/images/Blog_PB_Hero_Threshold.png",
+
   "mena-startup-funding-october-2026": "/images/Blog_Hero_TwoNumbers.png",
-  "corporate-structuring-and-governance": "/images/orpheus-governance-hero.jpg",
-  "bvi-vs-seychelles-which-offshore-jurisdiction-is-best":
-    "/images/bvi.jpg",
-
-  "documents-required-for-business-loan-in-uae":
-    "/images/compliance.jpg",
-
-  "why-your-uae-business-bank-account-application-got-rejected":
-    "/images/bank-account-rejected.jpg",
-
-  "why-dubai-companies-choose-vision-bank":
-    "/images/vision-bank-corporate-accounts.jpg",
-
-  "why-uae-banks-freeze-accounts-and-how-to-avoid-it":
-    "/images/entity.jpg",
-
-  "open-business-account-with-mashreq-bank-dubai":
-    "/images/open-business-account-with-mashreq-bank-dubai.jpg",
-
-  "private-debt-explained":
-    "/images/private-debt-explained.jpg",
-
-  "what-is-offshore-banking-and-how-does-it-work":
-    "/images/what-is-offshore-banking-and-how-does-it-work.jpg",
-
-  "best-financial-advisors-in-dubai":
-    "/images/best-financial-advisors-in-dubai.jpg",
-
-  "offshore-business-in-seychelles":
-    "/images/offshore-business-in-seychelles.jpg",
-
-  "how-to-start-your-business-in-dubai-for-under-aed-6000":
-    "/images/how-to-start-your-business-in-dubai-for-under-aed-6000.jpg",
-
-  "how-to-buy-a-home-in-dubai-or-abu-dhabi":
-    "/images/buy-home-dubai-abu-dhabi.jpg",
+  "corporate-structuring-and-governance": "/images/Orpheus_Blog_Header_Governance.jpg",
+  "bvi-vs-seychelles-which-offshore-jurisdiction-is-best": "/images/bvi.jpg",
+  "documents-required-for-business-loan-in-uae": "/images/compliance.jpg",
+  "why-your-uae-business-bank-account-application-got-rejected": "/images/bank-account-rejected.jpg",
+  "why-dubai-companies-choose-vision-bank": "/images/vision-bank-corporate-accounts.jpg",
+  "why-uae-banks-freeze-accounts-and-how-to-avoid-it": "/images/entity.jpg",
+  "open-business-account-with-mashreq-bank-dubai": "/images/open-business-account-with-mashreq-bank-dubai.jpg",
+  "private-debt-explained": "/images/private-debt-explained.jpg",
+  "what-is-offshore-banking-and-how-does-it-work": "/images/what-is-offshore-banking-and-how-does-it-work.jpg",
+  "best-financial-advisors-in-dubai": "/images/best-financial-advisors-in-dubai.jpg",
+  "offshore-business-in-seychelles": "/images/offshore-business-in-seychelles.jpg",
+  "how-to-start-your-business-in-dubai-for-under-aed-6000": "/images/how-to-start-your-business-in-dubai-for-under-aed-6000.jpg",
+  "how-to-buy-a-home-in-dubai-or-abu-dhabi": "/images/buy-home-dubai-abu-dhabi.jpg",
 };
 
-function getArticleImage(slug: string) {
+function articleImage(slug: string) {
   return blogImages[slug] ?? "/images/entity.jpg";
 }
 
 export default function BlogPostPage() {
   const { slug } = useParams();
+  const post = slug ? getPostBySlug(slug) : undefined;
+  const [activeSection, setActiveSection] = useState(0);
+  const [lineProgress, setLineProgress] = useState(0);
+  const [lineLength, setLineLength] = useState(0);
+  const [authorImageFailed, setAuthorImageFailed] = useState(false);
+  const timelineRef = useRef<HTMLDivElement>(null);
 
-  const post = slug
-    ? getPostBySlug(slug)
-    : undefined;
-
-  const progressRef =
-    useRef<HTMLDivElement>(null);
-
-  const articleBodyRef =
-    useRef<HTMLElement>(null);
-
-  const sidebarProgressRef =
-    useRef<HTMLSpanElement>(null);
-
-  const [activeIdx, setActiveIdx] =
-    useState(0);
-
-  const sectionRefs =
-    useRef<(HTMLElement | null)[]>([]);
-
-  /* =====================================================
-      TOP READING PROGRESS
-  ===================================================== */
+  // Reuse the author image already shipped with the Orpheus website.
+  const hasRachitPhoto = Boolean(
+    post?.author.name?.toLowerCase().includes("rachit")
+  );
 
   useEffect(() => {
-    setupGsap();
-
-    if (!progressRef.current) return;
-
-    gsap.set(progressRef.current, {
-      scaleX: 0,
-      transformOrigin: "left center",
-    });
-
-    const tween = gsap.to(
-      progressRef.current,
-      {
-        scaleX: 1,
-        ease: "none",
-
-        scrollTrigger: {
-          trigger: document.documentElement,
-          start: "top top",
-          end: "bottom bottom",
-          scrub: 0.25,
-          invalidateOnRefresh: true,
-        },
-      }
-    );
-
-    ScrollTrigger.refresh();
-
-    return () => {
-      tween.scrollTrigger?.kill();
-      tween.kill();
-    };
+    setActiveSection(0);
+    setLineProgress(0);
+    setLineLength(0);
+    setAuthorImageFailed(false);
+    window.scrollTo({ top: 0, behavior: "auto" });
   }, [slug]);
 
-  /* =====================================================
-      SIDEBAR VERTICAL PROGRESS
-  ===================================================== */
-
-  useEffect(() => {
-    setupGsap();
-
-    if (
-      !sidebarProgressRef.current ||
-      !articleBodyRef.current
-    ) {
-      return;
-    }
-
-    gsap.set(sidebarProgressRef.current, {
-      scaleY: 0,
-      transformOrigin: "top center",
-    });
-
-    const tween = gsap.to(
-      sidebarProgressRef.current,
-      {
-        scaleY: 1,
-        ease: "none",
-
-        scrollTrigger: {
-          trigger: articleBodyRef.current,
-          start: "top 40%",
-          end: "bottom 70%",
-          scrub: 0.3,
-          invalidateOnRefresh: true,
-        },
-      }
-    );
-
-    return () => {
-      tween.scrollTrigger?.kill();
-      tween.kill();
-    };
-  }, [slug, post]);
-
-  /* =====================================================
-      ACTIVE ARTICLE SECTION
-  ===================================================== */
-
-  useEffect(() => {
-    if (!post) return;
-
-    const triggers: ScrollTrigger[] = [];
-
-    sectionRefs.current.forEach(
-      (element, index) => {
-        if (!element) return;
-
-        const trigger =
-          ScrollTrigger.create({
-            trigger: element,
-            start: "top 32%",
-            end: "bottom 32%",
-
-            onToggle: (self) => {
-              if (self.isActive) {
-                setActiveIdx(index);
-              }
-            },
-          });
-
-        triggers.push(trigger);
-      }
-    );
-
-    return () =>
-      triggers.forEach((trigger) =>
-        trigger.kill()
-      );
-  }, [post]);
-
-  /* Article metadata is updated on route transitions. For unfurled OG tags
-     and full crawler compatibility, use prerendering/SSR in deployment. */
+  // Keep page metadata/canonical URL correct when navigating between articles.
   useEffect(() => {
     if (!post) return;
     const url = `https://orpheusfinancial.co/blog/${post.slug}`;
     const title = post.seoTitle || `${post.title} | Orpheus Financial`;
     const description = post.seoDescription || post.excerpt;
-    const imageUrl = `https://orpheusfinancial.co${getArticleImage(post.slug)}`;
-    const previousTitle = document.title;
-    const touched: Array<() => void> = [];
+    const image = `https://orpheusfinancial.co${articleImage(post.slug)}`;
+    const oldTitle = document.title;
+    const undo: Array<() => void> = [];
 
-    function updateMeta(selector: string, attribute: string, content: string) {
-      let element = document.head.querySelector<HTMLMetaElement>(selector);
-      const created = !element;
-      if (!element) {
-        element = document.createElement("meta");
-        element.setAttribute(attribute, selector.includes("property=")
-          ? selector.match(/property="([^"]+)"/)?.[1] || ""
-          : selector.match(/name="([^"]+)"/)?.[1] || "");
-        document.head.appendChild(element);
+    const updateMeta = (attribute: "name" | "property", key: string, value: string) => {
+      let target = document.head.querySelector<HTMLMetaElement>(`meta[${attribute}="${key}"]`);
+      const created = !target;
+      if (!target) {
+        target = document.createElement("meta");
+        target.setAttribute(attribute, key);
+        document.head.appendChild(target);
       }
-      const target = element;
-      const previous = target.getAttribute("content");
-      target.setAttribute("content", content);
-      touched.push(() => {
-        if (created) target.remove();
-        else if (previous === null) target.removeAttribute("content");
-        else target.setAttribute("content", previous);
+      const element = target;
+      const previous = element.getAttribute("content");
+      element.setAttribute("content", value);
+      undo.push(() => {
+        if (created) element.remove();
+        else if (previous === null) element.removeAttribute("content");
+        else element.setAttribute("content", previous);
       });
-    }
+    };
 
     document.title = title;
-    updateMeta('meta[name="description"]', 'name', description);
-    updateMeta('meta[property="og:type"]', 'property', 'article');
-    updateMeta('meta[property="og:title"]', 'property', title);
-    updateMeta('meta[property="og:description"]', 'property', description);
-    updateMeta('meta[property="og:url"]', 'property', url);
-    updateMeta('meta[property="og:image"]', 'property', imageUrl);
-    updateMeta('meta[name="twitter:title"]', 'name', title);
-    updateMeta('meta[name="twitter:description"]', 'name', description);
-    updateMeta('meta[name="twitter:image"]', 'name', imageUrl);
+    updateMeta("name", "description", description);
+    updateMeta("property", "og:type", "article");
+    updateMeta("property", "og:title", title);
+    updateMeta("property", "og:description", description);
+    updateMeta("property", "og:url", url);
+    updateMeta("property", "og:image", image);
+    updateMeta("name", "twitter:title", title);
+    updateMeta("name", "twitter:description", description);
+    updateMeta("name", "twitter:image", image);
+
     let canonical = document.head.querySelector<HTMLLinkElement>('link[rel="canonical"]');
-    const newCanonical = !canonical;
+    const createdCanonical = !canonical;
     if (!canonical) {
-      canonical = document.createElement('link');
-      canonical.rel = 'canonical';
+      canonical = document.createElement("link");
+      canonical.rel = "canonical";
       document.head.appendChild(canonical);
     }
-    const previousHref = canonical.href;
-    canonical.href = url;
-    touched.push(() => {
-      if (newCanonical) canonical?.remove();
-      else if (canonical) canonical.href = previousHref;
+    const canonicalEl = canonical;
+    const oldHref = canonicalEl.getAttribute("href");
+    canonicalEl.href = url;
+    undo.push(() => {
+      if (createdCanonical) canonicalEl.remove();
+      else if (oldHref === null) canonicalEl.removeAttribute("href");
+      else canonicalEl.setAttribute("href", oldHref);
     });
+
     return () => {
-      document.title = previousTitle;
-      touched.reverse().forEach(revert => revert());
+      document.title = oldTitle;
+      undo.reverse().forEach((callback) => callback());
     };
   }, [post]);
 
-  if (!post) {
-    return <NotFound />;
-  }
+  useEffect(() => {
+    if (!post || !post.body.length) return;
+    const elements = post.body
+      .map((_, index) => document.getElementById(`article-section-${index}`))
+      .filter((node): node is HTMLElement => Boolean(node));
+    if (typeof IntersectionObserver === "undefined") return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visible = entries
+          .filter((entry) => entry.isIntersecting)
+          .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
+        if (visible[0]) {
+          const index = Number(visible[0].target.id.replace("article-section-", ""));
+          if (Number.isInteger(index)) setActiveSection(index);
+        }
+      },
+      { rootMargin: "-160px 0px -55% 0px", threshold: 0 }
+    );
+    elements.forEach((el) => observer.observe(el));
+    return () => observer.disconnect();
+  }, [post]);
 
-  const heroImage =
-    getArticleImage(post.slug);
+  // Fill the connecting line as the reader progresses past the numbered markers.
+  // This tracks real page scroll, so it works for sections of different lengths.
+  useEffect(() => {
+    if (!post || post.body.length < 2) return;
+    let frame = 0;
+
+    const updateProgress = () => {
+      frame = 0;
+      const timeline = timelineRef.current;
+      const first = document.getElementById("article-section-0");
+      const last = document.getElementById(
+        `article-section-${post.body.length - 1}`
+      );
+      if (!timeline || !first || !last) return;
+
+      const rootTop = timeline.getBoundingClientRect().top + window.scrollY;
+      const firstY = first.getBoundingClientRect().top + window.scrollY - rootTop + 26;
+      const lastY = last.getBoundingClientRect().top + window.scrollY - rootTop + 26;
+      setLineLength(Math.max(0, lastY - firstY));
+      const readingLine = window.scrollY + Math.min(window.innerHeight * 0.38, 300);
+      const value = ((readingLine - (rootTop + firstY)) / Math.max(1, lastY - firstY)) * 100;
+      setLineProgress(Math.min(100, Math.max(0, value)));
+    };
+
+    const requestUpdate = () => {
+      if (!frame) frame = window.requestAnimationFrame(updateProgress);
+    };
+
+    updateProgress();
+    window.addEventListener("scroll", requestUpdate, { passive: true });
+    window.addEventListener("resize", requestUpdate);
+    return () => {
+      window.removeEventListener("scroll", requestUpdate);
+      window.removeEventListener("resize", requestUpdate);
+      if (frame) window.cancelAnimationFrame(frame);
+    };
+  }, [post]);
+
+  if (!post) return <NotFound />;
+
+  const isGovernance = post.slug === "corporate-structuring-and-governance";
+  const isFunding = post.slug === "mena-startup-funding-october-2026";
+
+  const jumpTo = (index: number) => {
+    setActiveSection(index);
+    document.getElementById(`article-section-${index}`)?.scrollIntoView({
+      behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches
+        ? "auto"
+        : "smooth",
+      block: "start",
+    });
+  };
 
   return (
-    <main
-      className="
-        w-full
-        overflow-x-hidden
-        bg-[#FFFEFA]
-        pt-[72px]
-        text-[#0A1714]
-
-        lg:pt-[76px]
-      "
-    >
-      {/* =====================================================
-          READING PROGRESS
-      ===================================================== */}
-
-      <div
-        className="
-          fixed
-          left-0
-          right-0
-          top-[72px]
-          z-[999]
-
-          h-[4px]
-          overflow-visible
-
-          bg-[#E8E3D7]/70
-
-          lg:top-[76px]
-        "
-      >
-        <div
-          ref={progressRef}
-          className="
-            relative
-
-            h-full
-            w-full
-
-            origin-left
-
-            bg-[linear-gradient(90deg,#0B5345_0%,#69B7A1_45%,#D8B867_75%,#E9D59C_100%)]
-
-            shadow-[0_0_14px_rgba(216,184,103,.45)]
-          "
-        >
-          <span
-            aria-hidden="true"
-            className="
-              absolute
-              right-0
-              top-1/2
-
-              h-[10px]
-              w-[10px]
-
-              -translate-y-1/2
-              translate-x-1/2
-
-              rounded-full
-
-              bg-[#D8B867]
-
-              shadow-[0_0_0_3px_rgba(216,184,103,.18),0_0_16px_rgba(216,184,103,.75)]
-            "
-          />
-        </div>
-      </div>
-
-      {/* =====================================================
-          ARTICLE HERO
-      ===================================================== */}
-
-      <section
-        className="
-          relative
-          overflow-hidden
-
-          border-b
-          border-[#DDE2DD]
-
-          bg-[#F7F4EC]
-
-          pt-3
-          pb-7
-
-          sm:pt-4
-          sm:pb-8
-
-          md:pt-4
-          md:pb-9
-
-          lg:pt-5
-          lg:pb-10
-
-          xl:pt-5
-          xl:pb-11
-        "
-      >
-        <div
-          className="
-            absolute
-            inset-0
-
-            grid-texture
-            opacity-40
-          "
-        />
-
-        <div
-          className="
-            section-shell
-
-            relative
-
-            w-full
-            min-w-0
-          "
-        >
-          {/* BACK LINK */}
-
+    <main className="min-h-screen overflow-x-clip bg-[#FBFAF6] pt-[76px] text-[#173C31]">
+      {/* COMPACT EDITORIAL HERO — SAME VISUAL SCALE AS OTHER PAGES */}
+      <header className="relative border-b border-[#E0E8DD] bg-[#F5F7F1]">
+        <div className="mx-auto max-w-[1200px] px-5 pb-8 pt-6 sm:px-8 lg:px-10">
           <Link
             to="/blog"
-            className="
-              inline-flex
-              items-center
-              gap-2
-
-              text-[10px]
-              font-bold
-              uppercase
-              tracking-[.14em]
-
-              text-[#0B5345]
-
-              transition
-
-              hover:text-[#A7802D]
-
-              sm:text-[11px]
-            "
+            className="inline-flex items-center gap-2 text-[14px] font-semibold text-[#0B5345] hover:text-[#A48645]"
           >
-            <ArrowLeft size={13} />
-
-            Back to Insights
+            <ArrowLeft size={17} /> Back to all articles
           </Link>
-
-          {/* =================================================
-              HERO GRID
-          ================================================= */}
-
-          <div
-            className="
-              mt-4
-
-              grid
-              min-w-0
-              grid-cols-1
-
-              gap-7
-
-              sm:mt-5
-              sm:gap-8
-
-              lg:mt-6
-              lg:grid-cols-[minmax(0,0.92fr)_minmax(430px,1.08fr)]
-              lg:items-center
-              lg:gap-12
-
-              xl:grid-cols-[minmax(0,0.9fr)_minmax(520px,1.1fr)]
-              xl:gap-14
-            "
-          >
-            {/* =================================================
-                HERO CONTENT
-            ================================================= */}
-
+          <div className="mt-5 grid items-center gap-6 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,.95fr)] lg:gap-9">
             <div className="min-w-0">
-
-              {/* META */}
-
-              <div
-                className="
-                  flex
-                  min-w-0
-                  flex-wrap
-                  items-center
-
-                  gap-x-2
-                  gap-y-1.5
-
-                  text-[9px]
-                  font-bold
-                  uppercase
-                  tracking-[.13em]
-
-                  sm:text-[10px]
-
-                  lg:text-[11px]
-                "
-              >
-                <span className="text-[#0B5345]">
-                  {post.category}
-                </span>
-
-                <span className="text-[#A9B1AE]">
-                  •
-                </span>
-
-                <span className="text-[#788580]">
-                  {post.date}
-                </span>
-
-                {post.readTime && (
-                  <>
-                    <span className="text-[#A9B1AE]">
-                      •
-                    </span>
-
-                    <span
-                      className="
-                        flex
-                        items-center
-                        gap-1.5
-
-                        text-[#788580]
-                      "
-                    >
-                      <Clock3 size={11} />
-
-                      {post.readTime}
-                    </span>
-                  </>
-                )}
-              </div>
-
-              {/* TITLE */}
-
-              <h1
-                className="
-                  mt-4
-
-                  w-full
-                  min-w-0
-                  max-w-[760px]
-
-                  break-words
-
-                  font-serif
-
-                  text-[34px]
-                  font-normal
-
-                  leading-[1.01]
-
-                  tracking-[-.038em]
-
-                  sm:text-[42px]
-
-                  md:text-[48px]
-
-                  lg:text-[52px]
-                  lg:leading-[.99]
-
-                  xl:text-[60px]
-                "
-              >
+              <span className="inline-flex items-center rounded-full border border-[#DECBA3] bg-white px-3 py-1.5 text-[11px] font-bold uppercase tracking-[.12em] text-[#A48645]">
+                {post.category}
+              </span>
+              <h1 className="mt-3 max-w-[630px] break-words font-serif text-[31px] leading-[1.14] tracking-[-.025em] text-[#123C30] sm:text-[38px] lg:text-[40px] xl:text-[43px]">
                 {post.title}
               </h1>
-
-              {/* EXCERPT */}
-
-              <p
-                className="
-                  mt-5
-
-                  w-full
-                  min-w-0
-                  max-w-[650px]
-
-                  break-words
-
-                  text-[15px]
-
-                  leading-[1.7]
-
-                  text-[#5F6D68]
-
-                  sm:text-[16px]
-                  sm:leading-7
-
-                  lg:text-[17px]
-                "
-              >
+              <p className="mt-3 max-w-[600px] text-[15px] leading-7 text-[#63776A] sm:text-[16px]">
                 {post.excerpt}
               </p>
-
-              {/* AUTHOR */}
-
-              <div
-                className="
-                  mt-5
-
-                  flex
-                  items-center
-                  gap-3
-
-                  border-t
-                  border-[#D9DED9]
-
-                  pt-4
-
-                  sm:mt-6
-                  sm:pt-5
-                "
-              >
-                <div
-                  className="
-                    flex
-
-                    h-9
-                    w-9
-                    shrink-0
-
-                    items-center
-                    justify-center
-
-                    rounded-full
-
-                    bg-[#0B5345]
-
-                    text-[11px]
-                    font-bold
-                    text-white
-
-                    sm:h-10
-                    sm:w-10
-                    sm:text-[12px]
-                  "
-                >
-                  {post.author.initials}
-                </div>
-
-                <div className="min-w-0">
-                  <p
-                    className="
-                      truncate
-
-                      text-[14px]
-                      font-semibold
-
-                      sm:text-[15px]
-                    "
-                  >
-                    {post.author.name}
-                  </p>
-
-                  <p
-                    className="
-                      mt-0.5
-
-                      text-[9px]
-                      uppercase
-                      tracking-[.12em]
-
-                      text-[#7B8883]
-
-                      sm:text-[10px]
-                    "
-                  >
-                    {post.author.role}
-                  </p>
-                </div>
+              <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2 text-[13px] text-[#63766A]">
+                <span className="inline-flex items-center gap-2 font-semibold text-[#173C31]">
+                  {hasRachitPhoto && !authorImageFailed ? (
+                    <img
+                      src="/images/rachit.jpeg"
+                      alt=""
+                      className="h-8 w-8 rounded-full border border-[#D8B867]/50 bg-[#E8EFE7] object-cover"
+                      onError={() => setAuthorImageFailed(true)}
+                    />
+                  ) : (
+                    <UserRound size={16} className="text-[#A48645]" />
+                  )}
+                  {post.author.name}
+                </span>
+                <span className="inline-flex items-center gap-1.5"><CalendarDays size={15} /> {post.date}</span>
+                {post.readTime && (
+                  <span className="inline-flex items-center gap-1.5"><Clock3 size={15} /> {post.readTime}</span>
+                )}
               </div>
             </div>
-
-            {/* =================================================
-                HERO IMAGE
-            ================================================= */}
-
-            <div
-              className="
-                relative
-
-                w-full
-                min-w-0
-
-                overflow-hidden
-
-                rounded-[18px]
-
-                border
-                border-[#D9DED9]
-
-                bg-[#E5E8E3]
-
-                aspect-[16/10]
-
-                sm:aspect-[16/9]
-                sm:rounded-[22px]
-
-                lg:h-[430px]
-                lg:aspect-auto
-                lg:rounded-[24px]
-
-                xl:h-[470px]
-              "
-            >
+            <div className="min-w-0 overflow-hidden rounded-2xl border border-[#DCE6DC] bg-[#071C18] shadow-[0_10px_28px_rgba(8,45,37,.09)]">
               <SmartImage
-                src={heroImage}
+                src={articleImage(post.slug)}
                 alt={post.title}
-                className={`
-                  h-full
-                  w-full
-
-                  ${post.slug === "mena-startup-funding-october-2026" ? "object-contain bg-[#0B0B0B]" : "object-cover"}
-                  object-center
-                `}
+                className={`h-[225px] w-full sm:h-[285px] lg:h-[300px] ${isFunding ? "bg-[#0B0B0B] object-contain" : "object-cover"}`}
               />
-
-              <div
-                className="
-                  absolute
-                  inset-0
-
-                  bg-[linear-gradient(
-                    180deg,
-                    transparent_52%,
-                    rgba(4,24,19,.70)_100%
-                  )]
-                "
-              />
-
-              <div
-                className="
-                  absolute
-
-                  bottom-3
-                  left-3
-
-                  max-w-[calc(100%-24px)]
-
-                  rounded-full
-
-                  bg-[#07251E]/90
-
-                  px-3
-                  py-1.5
-
-                  text-[8px]
-                  font-bold
-                  uppercase
-                  tracking-[.12em]
-
-                  text-[#E4C77D]
-
-                  sm:bottom-4
-                  sm:left-4
-                  sm:text-[9px]
-
-                  lg:bottom-5
-                  lg:left-5
-                  lg:text-[10px]
-                "
-              >
-                Orpheus Financial Insight
-              </div>
             </div>
           </div>
         </div>
-      </section>
-
-      {/* =====================================================
-          ARTICLE BODY
-      ===================================================== */}
-
-      <section
-        ref={articleBodyRef}
-        className="
-          w-full
-          overflow-hidden
-
-          bg-white
-
-          py-9
-
-          sm:py-12
-
-          md:py-16
-
-          lg:py-20
-        "
-      >
-        <div
-          className="
-            section-shell
-
-            grid
-
-            w-full
-            min-w-0
-
-            grid-cols-1
-
-            gap-8
-
-            lg:grid-cols-[300px_minmax(0,760px)]
-            lg:justify-center
-            lg:gap-14
-          "
-        >
-          {/* =================================================
-              DESKTOP TABLE OF CONTENTS
-          ================================================= */}
-
-          <aside
-            className="
-              relative
-              hidden
-
-              lg:block
-            "
-          >
-            {/* FULL HEIGHT RAIL */}
-
-            <span
-              aria-hidden="true"
-              className="
-                pointer-events-none
-
-                absolute
-
-                bottom-0
-                right-0
-                top-0
-
-                w-px
-
-                bg-[#E2E6E2]
-              "
-            />
-
-            {/* ANIMATED PROGRESS LINE */}
-
-            <span
-              ref={sidebarProgressRef}
-              aria-hidden="true"
-              className="
-                pointer-events-none
-
-                absolute
-
-                right-0
-                top-0
-
-                z-10
-
-                h-full
-                w-[3px]
-
-                origin-top
-
-                rounded-full
-
-                bg-[linear-gradient(180deg,#D8B867_0%,#69B7A1_45%,#0B5345_100%)]
-
-                shadow-[0_0_10px_rgba(105,183,161,.25)]
-              "
-            />
-
-            <div
-              className="
-                sticky
-                top-[118px]
-
-                mr-7
-
-                overflow-hidden
-
-                rounded-[22px]
-
-                border
-                border-[#DDE2DD]
-
-                bg-[#FBFAF6]
-
-                p-6
-
-                shadow-[0_12px_35px_rgba(7,40,33,.035)]
-              "
-            >
-              <p
-                className="
-                  text-[12px]
-                  font-extrabold
-                  uppercase
-                  tracking-[.17em]
-
-                  text-[#A7802D]
-                "
-              >
-                IN THIS ARTICLE
-              </p>
-
-              <ul
-                className="
-                  mt-5
-
-                  space-y-1
-
-                  border-l
-                  border-[#DDE2DD]
-                "
-              >
-                {post.body.map(
-                  (section, index) => (
-                    <li key={index}>
-                      <a
-                        href={`#section-${index}`}
-                        className={`
-                          block
-
-                          -ml-px
-
-                          border-l-2
-
-                          py-3
-                          pl-4
-                          pr-2
-
-                          text-[15px]
-
-                          leading-[1.45]
-
-                          transition-all
-                          duration-300
-
-                          ${
-                            activeIdx === index
-                              ? `
-                                  border-[#0B5345]
-                                  font-semibold
-                                  text-[#0B5345]
-                                `
-                              : `
-                                  border-transparent
-                                  text-[#66736E]
-
-                                  hover:border-[#C6D4CF]
-                                  hover:text-[#0B5345]
-                                `
-                          }
-                        `}
-                      >
-                        {section.heading}
-                      </a>
-                    </li>
-                  )
-                )}
-              </ul>
-
-              {/* CTA */}
-
-              <div
-                className="
-                  group/card
-                  relative
-
-                  mt-7
-
-                  overflow-hidden
-
-                  rounded-[18px]
-
-                  border
-                  border-[#DDE2DD]
-
-                  bg-[#F8F6F0]
-
-                  p-5
-
-                  transition-all
-                  duration-300
-
-                  hover:-translate-y-1
-                  hover:border-[#0B5345]/25
-                  hover:shadow-[0_14px_32px_rgba(7,40,33,.07)]
-                "
-              >
-                <span
-                  aria-hidden="true"
-                  className="
-                    pointer-events-none
-
-                    absolute
-
-                    left-0
-                    top-0
-
-                    h-[3px]
-                    w-full
-
-                    origin-left
-                    scale-x-0
-
-                    bg-[linear-gradient(
-                      90deg,
-                      #0B5345_0%,
-                      #69B7A1_60%,
-                      #D8B867_100%
-                    )]
-
-                    transition-transform
-                    duration-300
-
-                    group-hover/card:scale-x-100
-                  "
-                />
-
-                <Mail
-                  size={18}
-                  className="text-[#0B5345]"
-                />
-
-                <p
-                  className="
-                    mt-4
-
-                    font-serif
-
-                    text-[20px]
-
-                    leading-[1.18]
-                  "
-                >
-                  Need advice on this topic?
-                </p>
-
-                <Link
-                  to="/contact"
-                  className="
-                    mt-5
-
-                    inline-flex
-                    items-center
-                    gap-2
-
-                    text-[11px]
-                    font-bold
-                    uppercase
-                    tracking-[.12em]
-
-                    text-[#0B5345]
-                  "
-                >
-                  Speak with Orpheus
-
-                  <ArrowRight size={12} />
-                </Link>
+      </header>
+
+      {/* COMPACT JUMP NAVIGATION — NO SIDEBAR OR NESTED SCROLL */}
+      {post.body.length > 0 && (
+        <div className="mx-auto w-full max-w-[1200px] px-5 pt-7 sm:px-8 lg:px-10">
+          <div className="flex flex-col gap-3 rounded-xl border border-[#DFE7DD] bg-white px-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-6">
+            <div className="flex items-center gap-3">
+              <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-[#EAF2E9] text-[#0B5345]">
+                <List size={20} aria-hidden="true" />
+              </span>
+              <div>
+                <p className="text-[16px] font-semibold text-[#123C30]">In this article</p>
+                <p className="text-[13px] text-[#718174]">{post.body.length} connected sections · All content below</p>
               </div>
             </div>
-          </aside>
-
-          {/* =================================================
-              ARTICLE CONTENT
-          ================================================= */}
-
-          <article
-            className="
-              w-full
-              min-w-0
-              max-w-[760px]
-
-              overflow-hidden
-            "
-          >
-            {/* =================================================
-                MOBILE ARTICLE NAVIGATION
-            ================================================= */}
-
-            <div
-              className="
-                mb-8
-
-                w-full
-                min-w-0
-
-                rounded-[18px]
-
-                border
-                border-[#DDE2DD]
-
-                bg-[#F8F6F0]
-
-                p-4
-
-                lg:hidden
-              "
-            >
-              <div
-                className="
-                  flex
-                  items-center
-                  justify-between
-                  gap-4
-                "
+            <label className="flex w-full items-center gap-2 sm:w-auto">
+              <span className="shrink-0 text-[14px] font-medium text-[#52665A]">Jump to</span>
+              <select
+                aria-label="Jump to an article section"
+                value={activeSection}
+                onChange={(event) => jumpTo(Number(event.target.value))}
+                className="min-w-0 flex-1 rounded-lg border border-[#DCE6DC] bg-[#FBFCFA] px-3 py-2.5 text-[14px] font-medium text-[#0B5345] outline-none focus:border-[#0B5345] focus:ring-2 focus:ring-[#0B5345]/10 sm:w-[340px] sm:flex-none"
               >
-                <p
-                  className="
-                    text-[10px]
-                    font-extrabold
-                    uppercase
-                    tracking-[.16em]
-
-                    text-[#A7802D]
-                  "
-                >
-                  In this article
-                </p>
-
-                <span
-                  className="
-                    shrink-0
-
-                    text-[10px]
-                    font-bold
-
-                    text-[#0B5345]
-                  "
-                >
-                  {String(activeIdx + 1).padStart(2, "0")}
-                  /
-                  {String(post.body.length).padStart(2, "0")}
-                </span>
-              </div>
-
-              <div
-                className="
-                  mt-4
-
-                  flex
-
-                  w-full
-                  min-w-0
-
-                  gap-2
-
-                  overflow-x-auto
-                  overscroll-x-contain
-
-                  pb-1
-
-                  [scrollbar-width:none]
-
-                  [&::-webkit-scrollbar]:hidden
-                "
-              >
-                {post.body.map(
-                  (section, index) => (
-                    <a
-                      key={index}
-                      href={`#section-${index}`}
-                      className="
-                        flex
-                        shrink-0
-                        items-center
-                        gap-2
-
-                        rounded-full
-
-                        border
-                        border-[#0B5345]
-
-                        bg-[#0B5345]
-
-                        px-4
-                        py-2.5
-
-                        text-[12px]
-                        font-semibold
-
-                        leading-none
-
-                        text-white
-
-                        shadow-[0_8px_20px_rgba(7,40,33,.10)]
-
-                        transition-all
-                        duration-300
-
-                        hover:bg-[#0E6554]
-                      "
-                    >
-                      <span
-                        className="
-                          text-[10px]
-                          font-bold
-                          text-[#E4C77D]
-                        "
-                      >
-                        {String(index + 1).padStart(2, "0")}
-                      </span>
-
-                      {section.heading}
-                    </a>
-                  )
-                )}
-              </div>
-            </div>
-
-            {/* =================================================
-                ARTICLE INTRO
-            ================================================= */}
-
-            <div
-              className="
-                group/card
-                relative
-
-                mb-9
-
-                overflow-hidden
-
-                rounded-[18px]
-
-                border
-                border-[#DCE2DC]
-
-                bg-[#F8F6F0]
-
-                p-5
-
-                transition-all
-                duration-300
-
-                sm:mb-10
-                sm:rounded-[22px]
-                sm:p-6
-
-                md:mb-12
-                md:p-7
-
-                md:hover:-translate-y-1
-                md:hover:border-[#0B5345]/25
-                md:hover:shadow-[0_14px_32px_rgba(7,40,33,.06)]
-              "
-            >
-              <span
-                aria-hidden="true"
-                className="
-                  pointer-events-none
-
-                  absolute
-
-                  left-0
-                  top-0
-
-                  hidden
-
-                  h-[3px]
-                  w-full
-
-                  origin-left
-                  scale-x-0
-
-                  bg-[linear-gradient(
-                    90deg,
-                    #0B5345_0%,
-                    #69B7A1_60%,
-                    #D8B867_100%
-                  )]
-
-                  transition-transform
-                  duration-300
-
-                  md:block
-                  md:group-hover/card:scale-x-100
-                "
-              />
-
-              <div className="flex gap-3 sm:gap-4">
-                <Quote
-                  size={21}
-                  className="
-                    mt-1
-                    shrink-0
-
-                    text-[#D8B867]
-
-                    sm:h-[22px]
-                    sm:w-[22px]
-                  "
-                />
-
-                <p
-                  className="
-                    min-w-0
-
-                    break-words
-
-                    font-serif
-
-                    text-[18px]
-                    font-normal
-
-                    leading-[1.4]
-
-                    text-[#24342F]
-
-                    sm:text-[20px]
-
-                    md:text-[21px]
-                  "
-                >
-                  {post.slug === "mena-startup-funding-october-2026"
-                    ? "The number is accurate. The framing is not."
-                    : "Good structuring starts with the commercial objective, not the jurisdiction, bank or product."}
-                </p>
-              </div>
-            </div>
-
-            {post.intro && post.intro.length > 0 && (
-              <div className="mb-10 space-y-4 sm:mb-12 sm:space-y-5">
-                {post.intro.map((paragraph, i) => (
-                  <p
-                    key={i}
-                    className="break-words text-[16px] leading-[1.8] text-[#4F5F59] sm:text-[17px] md:text-[18px] md:leading-[1.85]"
-                  >
-                    {paragraph}
-                  </p>
+                {post.body.map((section, index) => (
+                  <option key={`${index}-${section.heading}`} value={index}>
+                    {String(index + 1).padStart(2, "0")} — {section.heading}
+                  </option>
                 ))}
+              </select>
+            </label>
+          </div>
+        </div>
+      )}
+
+      {/* FULL-WIDTH ARTICLE WITH A SINGLE CONNECTED NUMBER SPINE */}
+      <div className="mx-auto w-full max-w-[1200px] px-5 pb-12 pt-6 sm:px-8 lg:px-10">
+        <article className="min-w-0 overflow-hidden rounded-2xl border border-[#E0E8DD] bg-white shadow-[0_8px_30px_rgba(8,45,37,.035)]">
+          <div className="px-4 py-6 sm:px-8 sm:py-8 lg:px-11">
+            {post.intro && post.intro.length > 0 && (
+              <div className="mb-8 rounded-xl border border-[#E1E8DD] border-l-[4px] border-l-[#C6A357] bg-[#F7F9F5] px-5 py-5 sm:px-7">
+                <h2 className="mb-3 inline-flex items-center gap-2 text-[18px] font-bold text-[#0B5345]">
+                  <BookOpen size={20} aria-hidden="true" /> Introduction
+                </h2>
+                <div className="space-y-3">
+                  {post.intro.map((paragraph, i) => (
+                    <p key={i} className="whitespace-pre-line break-words text-[17px] leading-[1.85] text-[#52665A] sm:text-[18px]">
+                      {paragraph}
+                    </p>
+                  ))}
+                </div>
               </div>
             )}
 
-            {/* =================================================
-                ARTICLE SECTIONS
-            ================================================= */}
-
-            {post.body.map(
-              (section, index) => (
-                <section
-                  key={index}
-                  id={`section-${index}`}
-                  ref={(element) => {
-                    sectionRefs.current[index] =
-                      element;
-                  }}
-                  className="
-                    mb-10
-
-                    w-full
-                    min-w-0
-
-                    scroll-mt-[105px]
-
-                    sm:mb-12
-
-                    md:mb-14
-                    md:scroll-mt-[120px]
-                  "
-                >
-                  {/* SECTION NUMBER */}
-
-                  <p
-                    className="
-                      text-[10px]
-                      font-bold
-                      uppercase
-                      tracking-[.16em]
-
-                      text-[#A7802D]
-
-                      sm:text-[11px]
-                    "
-                  >
-                    {String(index + 1).padStart(2, "0")}
-                  </p>
-
-                  {/* SECTION HEADING */}
-
-                  <h2
-                    className="
-                      mt-3
-
-                      w-full
-                      min-w-0
-                      max-w-[690px]
-
-                      break-words
-
-                      font-serif
-
-                      text-[29px]
-                      font-normal
-
-                      leading-[1.08]
-
-                      tracking-[-.025em]
-
-                      sm:text-[32px]
-
-                      md:text-[36px]
-
-                      lg:text-[40px]
-                    "
-                  >
-                    {section.heading}
-                  </h2>
-
-                  {/* PARAGRAPHS */}
-
-                  <div
-                    className="
-                      mt-5
-
-                      w-full
-                      min-w-0
-
-                      space-y-4
-
-                      sm:mt-6
-                      sm:space-y-5
-                    "
-                  >
-                    {section.paragraphs.map((paragraph, paragraphIndex) => (
-                      <div key={paragraphIndex} className="min-w-0">
-                        <p className="w-full min-w-0 break-words text-[16px] leading-[1.8] text-[#4F5F59] sm:text-[17px] md:text-[18px] md:leading-[1.85]">
-                          {paragraph}
-                        </p>
-                        {section.tables?.filter(table => table.afterParagraph === paragraphIndex).map((table, tableIndex) => (
-                          <figure key={`table-${paragraphIndex}-${tableIndex}`} className="my-7 max-w-full">
-                            <div className="w-full max-w-full overflow-x-auto rounded-xl border border-[#DAE3DC]" role="region" aria-label={table.caption || 'Funding table'} tabIndex={0}>
-                              <table className="w-full min-w-[390px] border-collapse text-left text-[13px] sm:text-[15px]">
-                                <thead className="bg-[#0B5345] text-white">
-                                  <tr>{table.headers.map(label => (
-                                    <th key={label} scope="col" className="whitespace-nowrap px-3 py-3 font-semibold sm:px-5">{label}</th>
-                                  ))}</tr>
-                                </thead>
-                                <tbody>{table.rows.map((row, i) => (
-                                  <tr key={i} className="border-t border-[#E2E8E2] even:bg-[#F8F8F5]">
-                                    {row.map((cell, j) => j === 0 ? (
-                                      <th key={j} scope="row" className="px-3 py-3 font-medium text-[#13352D] sm:px-5">{cell}</th>
-                                    ) : (
-                                      <td key={j} className="whitespace-nowrap px-3 py-3 text-[#475951] sm:px-5">{cell}</td>
-                                    ))}
-                                  </tr>
-                                ))}</tbody>
-                              </table>
-                            </div>
-                            {table.caption && <figcaption className="mt-2 text-xs leading-5 text-[#64736D]">{table.caption}</figcaption>}
-                          </figure>
-                        ))}
-                        {section.figures?.filter(figure => figure.afterParagraph === paragraphIndex).map((figure, figureIndex) => (
-                          <figure key={`figure-${paragraphIndex}-${figureIndex}`} className="my-7 w-full min-w-0 overflow-hidden sm:my-9">
-                            <img src={figure.src} alt={figure.alt} loading="lazy" decoding="async" className="h-auto w-full rounded-xl bg-[#0B0B0B] object-contain" />
-                            {figure.caption && <figcaption className="mt-2 text-xs leading-5 text-[#64736D] sm:text-sm">{figure.caption}</figcaption>}
-                          </figure>
-                        ))}
-                      </div>
-                    ))}
-                  </div>
-
-                  {post.slug === "corporate-structuring-and-governance" && (
-                    <GovernanceArticleExtras heading={section.heading} />
-                  )}
-
-                  {/* DIVIDER */}
-
-                  {index <
-                    post.body.length - 1 && (
-                    <div
-                      className="
-                        mt-9
-
-                        h-px
-                        w-full
-
-                        bg-[#E2E6E2]
-
-                        sm:mt-10
-
-                        md:mt-12
-                      "
-                    />
-                  )}
-                </section>
-              )
-            )}
-
-            {/* =================================================
-                AUTHOR END CARD
-                Simple realistic card using actual image
-            ================================================= */}
-
-            <div
-              className="
-                mt-12
-                overflow-hidden
-                rounded-[18px]
-                border
-                border-[#DDE2DD]
-                bg-[#07251E]
-                p-4
-                text-white
-                shadow-[0_14px_32px_rgba(7,40,33,.10)]
-
-                sm:mt-14
-                sm:rounded-[20px]
-                sm:p-5
-
-                md:mt-16
-                md:p-6
-              "
-            >
-              <div
-                className="
-                  flex
-                  items-start
-                  gap-4
-
-                  sm:gap-5
-                "
-              >
-                {/* AUTHOR IMAGE - compact, no cutting */}
+            {/* One continuous vertical line connects all numbered steps. */}
+            <div ref={timelineRef} className="relative">
+              {post.body.length > 1 && (
                 <div
-                  className="
-                    relative
-                    flex
-                    h-[72px]
-                    w-[72px]
-                    shrink-0
-                    items-center
-                    justify-center
-                    overflow-hidden
-                    rounded-full
-                    border
-                    border-[#D8B867]/35
-                    bg-[#092D25]
-                    shadow-[0_10px_22px_rgba(0,0,0,.16)]
-
-                    sm:h-[84px]
-                    sm:w-[84px]
-                  "
+                  aria-hidden="true"
+                  className="pointer-events-none absolute left-[22px] top-[25px] z-0 w-[3px] overflow-hidden rounded-full bg-[#D6E5D8] sm:left-[27px]"
+                  style={{ height: `${lineLength}px` }}
                 >
-                  <img
-                    src="/images/rachit.jpeg"
-                    alt="Rachit Yadav"
-                    className="
-                      h-full
-                      w-full
-                      object-contain
-                      object-center
-                    "
-                    loading="lazy"
+                  <div
+                    className="w-full rounded-full bg-gradient-to-b from-[#C7A358] via-[#0E8065] to-[#0B5345] shadow-[0_0_8px_rgba(11,83,69,.25)] transition-[height] duration-150 ease-out motion-reduce:transition-none"
+                    style={{ height: `${lineProgress}%` }}
                   />
                 </div>
+              )}
 
-                {/* AUTHOR CONTENT */}
-                <div className="min-w-0 flex-1">
-                  <div
-                    className="
-                      flex
-                      items-start
-                      justify-between
-                      gap-3
-                    "
-                  >
-                    <div className="min-w-0">
-                      <p className="section-kicker-gold">
-                        ABOUT THE AUTHOR
-                      </p>
+              {post.body.map((section, index) => (
+                <section
+                  key={`${index}-${section.heading}`}
+                  id={`article-section-${index}`}
+                  aria-labelledby={`article-heading-${index}`}
+                  className="relative z-10 grid min-w-0 scroll-mt-[110px] grid-cols-[46px_minmax(0,1fr)] gap-x-3 pb-8 last:pb-0 sm:grid-cols-[56px_minmax(0,1fr)] sm:gap-x-5 sm:pb-10"
+                >
+                  {/* LEFT NUMBER: CONNECTED TO ALL OTHER SECTION NUMBERS */}
+                  <div className="flex items-start justify-center">
+                    <span
+                      className={`relative z-10 inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full border-[3px] border-white text-[14px] font-bold shadow-[0_1px_5px_rgba(10,50,35,.12)] transition-colors sm:h-[52px] sm:w-[52px] sm:text-[16px] ${
+                        activeSection === index
+                          ? "bg-[#0B5345] text-white ring-2 ring-[#B8D4C1] shadow-[0_0_0_5px_rgba(11,83,69,.10)]"
+                          : index < activeSection
+                            ? "bg-[#C7A358] text-[#092C24] ring-1 ring-[#D8B867]"
+                            : "bg-[#EAF2E9] text-[#0B5345] ring-1 ring-[#D6E5D8]"
+                      }`}
+                    >
+                      {String(index + 1).padStart(2, "0")}
+                    </span>
+                  </div>
 
-                      <h3
-                        className="
-                          mt-1.5
-                          break-words
-                          font-serif
-                          text-[23px]
-                          font-normal
-                          leading-tight
+                  {/* MAIN ARTICLE TEXT USES THE ENTIRE REMAINING WIDTH */}
+                  <div className="min-w-0 pb-7 sm:pb-9">
+                    <h2
+                      id={`article-heading-${index}`}
+                      className="mb-4 font-serif text-[25px] leading-[1.23] tracking-tight text-[#123C30] sm:text-[30px] lg:text-[33px]"
+                    >
+                      {section.heading}
+                    </h2>
 
-                          sm:text-[26px]
-                          md:text-[28px]
-                        "
-                      >
-                        Rachit Yadav
-                      </h3>
+                    <div className="space-y-4">
+                      {section.paragraphs.map((paragraph, paragraphIndex) => (
+                        <div key={paragraphIndex} className="min-w-0">
+                          <p className="whitespace-pre-line break-words text-[17px] leading-[1.9] text-[#52665B] sm:text-[18px]">
+                            {paragraph}
+                          </p>
 
-                      <p
-                        className="
-                          mt-1
-                          break-words
-                          text-[10px]
-                          font-bold
-                          uppercase
-                          tracking-[.1em]
-                          text-[#D8B867]/85
+                          {section.tables
+                            ?.filter((table) => table.afterParagraph === paragraphIndex)
+                            .map((table, tableIndex) => (
+                              <figure key={`table-${paragraphIndex}-${tableIndex}`} className="my-5 min-w-0">
+                                <div
+                                  role="region"
+                                  aria-label={table.caption || "Article data table"}
+                                  tabIndex={0}
+                                  className="max-w-full overflow-x-auto rounded-xl border border-[#DCE5DA]"
+                                >
+                                  <table className="w-full min-w-[390px] border-collapse text-left text-[14px] sm:text-[15px]">
+                                    <thead className="bg-[#0B5345] text-white">
+                                      <tr>
+                                        {table.headers.map((header, i) => (
+                                          <th key={`${header}-${i}`} scope="col" className="px-4 py-3 font-semibold">{header}</th>
+                                        ))}
+                                      </tr>
+                                    </thead>
+                                    <tbody>
+                                      {table.rows.map((row, rowIndex) => (
+                                        <tr key={rowIndex} className="border-t border-[#E5EAE2] even:bg-[#F7F9F5]">
+                                          {row.map((cell, cellIndex) =>
+                                            cellIndex === 0 ? (
+                                              <th key={cellIndex} scope="row" className="px-4 py-3 font-semibold text-[#123C30]">{cell}</th>
+                                            ) : (
+                                              <td key={cellIndex} className="px-4 py-3 text-[#53665A]">{cell}</td>
+                                            )
+                                          )}
+                                        </tr>
+                                      ))}
+                                    </tbody>
+                                  </table>
+                                </div>
+                                {table.caption && <figcaption className="mt-2 text-[14px] text-[#718073]">{table.caption}</figcaption>}
+                              </figure>
+                            ))}
 
-                          sm:text-[11px]
-                        "
-                      >
-                        CEO · Orpheus Financial
-                      </p>
+                          {section.figures
+                            ?.filter((figure) => figure.afterParagraph === paragraphIndex)
+                            .map((figure, figureIndex) => (
+                              <figure key={`figure-${paragraphIndex}-${figureIndex}`} className="my-5 min-w-0">
+                                <img
+                                  src={figure.src}
+                                  alt={figure.alt}
+                                  loading="lazy"
+                                  decoding="async"
+                                  className="h-auto max-h-[580px] w-full rounded-xl bg-[#0B0B0B] object-contain"
+                                />
+                                {figure.caption && (
+                                  <figcaption className="mt-2 text-[14px] leading-6 text-[#718073]">{figure.caption}</figcaption>
+                                )}
+                              </figure>
+                            ))}
+                        </div>
+                      ))}
                     </div>
 
-                    <a
-                      href="https://www.linkedin.com/in/rachit-yadav-96a3951b9?utm_source=share_via&utm_content=profile&utm_medium=member_ios"
-                      target="_blank"
-                      rel="noreferrer"
-                      aria-label="Open Rachit Yadav LinkedIn profile"
-                      title="LinkedIn"
-                      className="
-                        inline-flex
-                        h-9
-                        w-9
-                        shrink-0
-                        items-center
-                        justify-center
-                        rounded-full
-                        border
-                        border-[#D8B867]/25
-                        bg-[#D8B867]/10
-                        text-[#E4C77D]
-                        transition-all
-                        duration-300
-                        hover:-translate-y-0.5
-                        hover:bg-[#D8B867]
-                        hover:text-[#071813]
+                    {isGovernance && (
+                      <div className="mt-5 min-w-0">
+                        <GovernanceArticleExtras heading={section.heading} />
+                      </div>
+                    )}
 
-                        sm:h-10
-                        sm:w-10
-                      "
-                    >
-                      <Linkedin size={17} />
-                    </a>
+                    {index < post.body.length - 1 && (
+                      <div className="mt-6 flex items-center justify-between gap-3 border-t border-[#EBF0E9] pt-4">
+                        <span className="text-[13px] text-[#8A988D]">Section {index + 1} of {post.body.length}</span>
+                        <button
+                          type="button"
+                          onClick={() => jumpTo(index + 1)}
+                          className="inline-flex items-center gap-2 text-[14px] font-semibold text-[#0B6450] hover:text-[#A48645]"
+                        >
+                          Next section <ArrowRight size={17} />
+                        </button>
+                      </div>
+                    )}
                   </div>
-
-                  <p
-                    className="
-                      mt-3
-                      max-w-[620px]
-                      break-words
-                      text-[13.5px]
-                      leading-6
-                      text-white/70
-
-                      sm:text-[14.5px]
-                      sm:leading-7
-                    "
-                  >
-                    Rachit Yadav is the CEO of Orpheus Financial, helping
-                    business owners unlock offshore banking, global financial
-                    access and cross-border growth.
-                  </p>
-
-                  <div
-                    className="
-                      mt-3
-                      flex
-                      flex-wrap
-                      gap-2
-                    "
-                  >
-                    {[
-                      "Dubai, UAE",
-                      "Offshore banking",
-                      "Cross-border growth",
-                    ].map((item) => (
-                      <span
-                        key={item}
-                        className="
-                          rounded-full
-                          border
-                          border-white/10
-                          bg-white/[.045]
-                          px-2.5
-                          py-1.5
-                          text-[10px]
-                          font-semibold
-                          leading-none
-                          text-white/70
-
-                          sm:text-[11px]
-                        "
-                      >
-                        {item}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              </div>
+                </section>
+              ))}
             </div>
-
-            {/* =================================================
-                BACK LINK
-            ================================================= */}
-
-            <div
-              className="
-                mt-8
-
-                border-t
-                border-[#DDE2DD]
-
-                pt-7
-
-                sm:mt-10
-                sm:pt-8
-              "
-            >
-              <Link
-                to="/blog"
-                className="
-                  inline-flex
-                  items-center
-                  gap-2
-
-                  text-[11px]
-                  font-bold
-                  uppercase
-                  tracking-[.12em]
-
-                  text-[#0B5345]
-
-                  sm:text-[12px]
-                "
-              >
-                <ArrowLeft size={12} />
-
-                All insights
-              </Link>
-            </div>
-          </article>
-        </div>
-      </section>
-
-      {/* =====================================================
-          RELATED CTA
-      ===================================================== */}
-
-      <section
-        className="
-          bg-[#F7F4EC]
-
-          py-10
-
-          sm:py-12
-
-          md:py-14
-        "
-      >
-        <div
-          className="
-            section-shell
-
-            flex
-            flex-col
-            justify-between
-
-            gap-6
-
-            md:flex-row
-            md:items-center
-          "
-        >
-          <div className="min-w-0">
-            <p className="section-kicker">
-              CONTINUE THE CONVERSATION
-            </p>
-
-            <p
-              className="
-                mt-3
-
-                max-w-[620px]
-
-                break-words
-
-                font-serif
-
-                text-[24px]
-                font-normal
-
-                leading-[1.1]
-
-                sm:text-[26px]
-
-                md:text-[28px]
-              "
-            >
-              Need to apply this thinking to a real structure,
-              transaction or banking requirement?
-            </p>
           </div>
 
-          <Link
-            to="/contact"
-            className="
-              inline-flex
+          <footer className="flex flex-wrap items-center justify-between gap-4 border-t border-[#E1E8DD] bg-[#F6F8F3] px-5 py-5 sm:px-8 lg:px-11">
+            <div className="flex min-w-0 items-center gap-4 sm:gap-5">
+              {hasRachitPhoto && !authorImageFailed ? (
+                <img
+                  src="/images/rachit.jpeg"
+                  alt={post.author.name}
+                  loading="lazy"
+                  onError={() => setAuthorImageFailed(true)}
+                  className="h-[100px] w-[100px] shrink-0 rounded-xl border-2 border-[#D8B867] bg-[#E8EFE7] object-cover object-center shadow-[0_4px_14px_rgba(8,45,37,0.10)] sm:h-[110px] sm:w-[110px]"
+                />
+              ) : (
+                <span className="flex h-[100px] w-[100px] shrink-0 items-center justify-center rounded-xl border-2 border-[#D8B867] bg-[#0B5345] text-[24px] font-bold text-[#E9D39A] sm:h-[110px] sm:w-[110px]">
+                  {post.author.initials}
+                </span>
+              )}
+              <div className="min-w-0">
+                <p className="text-[16px] font-bold text-[#173C31]">{post.author.name}</p>
+                <p className="mt-0.5 text-[13px] text-[#6B7B6C]">{post.author.role}</p>
 
-              min-h-[44px]
-              w-fit
-              shrink-0
+                {/* LinkedIn appears directly below the author's designation. */}
+                {hasRachitPhoto && (
+                  <a
+                    href="https://ae.linkedin.com/in/rachit-yadav-96a3951b9"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label="View Rachit Yadav's LinkedIn profile"
+                    title="Rachit Yadav on LinkedIn"
+                    className="mt-2 inline-flex items-center gap-2 rounded-full border border-[#C9DCE8] bg-[#EFF6FB] px-3 py-1.5 text-[13px] font-semibold text-[#0A66C2] transition-colors hover:border-[#0A66C2] hover:bg-[#0A66C2] hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#0A66C2]"
+                  >
+                    <Linkedin size={16} aria-hidden="true" />
+                    LinkedIn
+                  </a>
+                )}
+              </div>
+            </div>
+            <Link to="/contact" className="inline-flex min-h-10 items-center gap-2 rounded-full bg-[#0B5345] px-5 py-2 text-[14px] font-semibold text-white hover:bg-[#156B56]">
+              Speak with Orpheus <ArrowRight size={16} />
+            </Link>
+          </footer>
+        </article>
 
-              items-center
-              gap-2
-
-              rounded-md
-
-              bg-[#0B5345]
-
-              px-5
-
-              text-[11px]
-              font-bold
-              uppercase
-              tracking-[.09em]
-
-              text-white
-
-              sm:text-[12px]
-            "
-          >
-            Speak With Our Team
-
-            <ArrowRight size={13} />
+        <div className="mt-5 flex flex-wrap items-center justify-between gap-3">
+          <Link to="/blog" className="inline-flex items-center gap-2 text-[14px] font-semibold text-[#0B6450] hover:text-[#A48645]">
+            <ArrowLeft size={17} /> All insights
           </Link>
+          <button
+            type="button"
+            onClick={() => window.scrollTo({ top: 0, behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" })}
+            className="inline-flex items-center gap-2 rounded-full border border-[#DDE6DB] bg-white px-4 py-2 text-[14px] font-semibold text-[#0B6450] hover:bg-[#F1F7F1]"
+          >
+            <ArrowUp size={17} /> Back to top
+          </button>
         </div>
-      </section>
+      </div>
     </main>
   );
 }

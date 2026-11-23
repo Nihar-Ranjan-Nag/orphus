@@ -5,7 +5,7 @@ import puppeteer from "puppeteer";
 const DIST =
   process.argv[2] || "/home/ubuntu/orpheus-seo-test-build";
 
-const BASE = "http://127.0.0.1:4173";
+const BASE = process.env.PRERENDER_BASE || "http://127.0.0.1:4173";
 const SITE = "https://orpheusfinancial.co";
 
 const sitemap = fs.readFileSync(

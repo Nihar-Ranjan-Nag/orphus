@@ -58,7 +58,7 @@ node scripts/generate-seo.mjs dist
 
 echo "=== Starting temporary preview ==="
 
-npm run preview -- \
+./node_modules/.bin/vite preview \
     --host 127.0.0.1 \
     --port "$PORT" \
     --strictPort \

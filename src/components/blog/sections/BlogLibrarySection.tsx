@@ -3,9 +3,9 @@ import { useMemo, useState } from "react";
 import {
   ArrowRight,
   CalendarDays,
+  Clock3,
   ChevronLeft,
   ChevronRight,
-  Clock3,
   Search,
   X,
 } from "lucide-react";
@@ -16,18 +16,20 @@ import type { BlogPost } from "@/data/blogPosts";
 
 /**
  * ORPHEUS FINANCIAL
- *
- * Blog Library Section
+ * Blogs & Insights Section
  *
  * Features:
- * - Larger, readable typography
- * - Original blog data and images
- * - Dynamic category filtering
- * - Live search
+ * - Existing blogPosts.ts data
+ * - Dynamic category filters
+ * - Instant article search
  * - Responsive article cards
  * - Six articles per page
- * - Pagination
- * - Existing article routes
+ * - Previous / Next pagination
+ * - Empty state
+ * - Existing blog URLs
+ *
+ * Corporate governance is displayed
+ * separately below as the story section.
  */
 
 const ALL_CATEGORY = "All insights";
@@ -38,6 +40,8 @@ const POSTS_PER_PAGE = 6;
 ========================================== */
 
 const blogImages: Record<string, string> = {
+  "private-banking-for-founders-in-uae": "/images/Blog_PB_Hero_Threshold.png",
+
   "mena-startup-funding-october-2026":
     "/images/Blog_Hero_TwoNumbers.png",
 
@@ -86,7 +90,7 @@ function getBlogImage(slug: string): string {
 }
 
 /* ==========================================
-   BLOG CARD
+   REUSABLE ARTICLE CARD
 ========================================== */
 
 function BlogCard({ post }: { post: BlogPost }) {
@@ -103,7 +107,6 @@ function BlogCard({ post }: { post: BlogPost }) {
         hover:-translate-y-1
         hover:border-[#C7D9CB]
         hover:shadow-[0_12px_30px_rgba(8,45,37,.07)]
-        motion-reduce:transform-none
       "
     >
       {/* ARTICLE IMAGE */}
@@ -121,7 +124,9 @@ function BlogCard({ post }: { post: BlogPost }) {
           onError={(event) => {
             const image = event.currentTarget;
 
-            if (!image.src.endsWith("/images/entity.jpg")) {
+            if (
+              !image.src.endsWith("/images/entity.jpg")
+            ) {
               image.src = "/images/entity.jpg";
             }
           }}
@@ -129,12 +134,11 @@ function BlogCard({ post }: { post: BlogPost }) {
             aspect-[16/9] w-full object-cover
             transition-transform duration-500
             group-hover:scale-[1.04]
-            motion-reduce:transform-none
           "
         />
       </Link>
 
-      {/* ARTICLE CONTENT */}
+      {/* CARD CONTENT */}
 
       <div className="flex flex-1 flex-col p-5 sm:p-6">
 
@@ -143,7 +147,7 @@ function BlogCard({ post }: { post: BlogPost }) {
         <p
           className="
             text-[12px] font-bold uppercase
-            tracking-[0.12em] text-[#A48645]
+            tracking-[.13em] text-[#A48645]
           "
         >
           {post.category}
@@ -153,9 +157,8 @@ function BlogCard({ post }: { post: BlogPost }) {
 
         <h3
           className="
-            mt-3 font-serif
-            text-[23px] leading-[1.35]
-            text-[#173C31]
+            mt-3 font-serif text-[23px]
+            leading-[1.3] text-[#173C31]
             sm:text-[25px]
           "
         >
@@ -170,31 +173,28 @@ function BlogCard({ post }: { post: BlogPost }) {
           </Link>
         </h3>
 
-         
+        {/* PUBLICATION DATE AND ESTIMATED READING TIME */}
 
-        {/* DATE AND READ TIME */}
-
-        <div
-          className="
-            mt-5 flex flex-wrap
-            items-center gap-x-4 gap-y-2
-            text-[13px] text-[#7B897F]
-          "
-        >
+        <div className="mt-4 mb-5 flex flex-wrap items-center gap-x-5 gap-y-2 text-[13px] font-medium text-[#68796D]">
           <span className="inline-flex items-center gap-1.5">
-            <CalendarDays size={16} />
-            {post.date}
+            <CalendarDays size={15} className="shrink-0 text-[#A48645]" aria-hidden="true" />
+            <span>{post.date}</span>
           </span>
-
-          <span className="inline-flex items-center gap-1.5">
-            <Clock3 size={16} />
-            {post.readTime}
-          </span>
+          {post.readTime && (
+            <span className="inline-flex items-center gap-1.5">
+              <Clock3 size={15} className="shrink-0 text-[#A48645]" aria-hidden="true" />
+              <span>{post.readTime}</span>
+            </span>
+          )}
         </div>
 
         {/* READ ARTICLE */}
 
-        <div className="mt-5 border-t border-[#EBF0E8] pt-4">
+        <div
+          className="
+            mt-auto border-t border-[#EBF0E8] pt-4
+          "
+        >
           <Link
             to={articleUrl}
             className="
@@ -206,15 +206,7 @@ function BlogCard({ post }: { post: BlogPost }) {
             "
           >
             Read article
-
-            <ArrowRight
-              size={18}
-              className="
-                transition-transform duration-200
-                group-hover:translate-x-1
-                motion-reduce:transform-none
-              "
-            />
+            <ArrowRight size={18} />
           </Link>
         </div>
       </div>
@@ -236,10 +228,13 @@ export default function BlogLibrarySection() {
   const [currentPage, setCurrentPage] =
     useState(1);
 
-  /* ==========================================
-     BLOG DATA
-  ========================================== */
-
+  /**
+   * Keep the governance article out of
+   * the regular cards because its full
+   * story appears in the next section.
+   *
+   * No article data is deleted.
+   */
   const regularPosts = useMemo(
     () =>
       blogPosts.filter(
@@ -251,7 +246,7 @@ export default function BlogLibrarySection() {
   );
 
   /* ==========================================
-     CATEGORIES
+     DYNAMIC CATEGORIES
   ========================================== */
 
   const categories = useMemo(() => {
@@ -270,11 +265,12 @@ export default function BlogLibrarySection() {
   }, [regularPosts]);
 
   /* ==========================================
-     SEARCH AND FILTERING
+     SEARCH AND CATEGORY FILTER
   ========================================== */
 
   const filteredPosts = useMemo(() => {
-    const query = searchQuery.trim().toLowerCase();
+    const query =
+      searchQuery.trim().toLowerCase();
 
     return regularPosts.filter((post) => {
       const matchesCategory =
@@ -308,12 +304,18 @@ export default function BlogLibrarySection() {
 
   const totalPages = Math.max(
     1,
-    Math.ceil(filteredPosts.length / POSTS_PER_PAGE)
+    Math.ceil(
+      filteredPosts.length / POSTS_PER_PAGE
+    )
   );
 
-  const safePage = Math.min(currentPage, totalPages);
+  const safePage = Math.min(
+    currentPage,
+    totalPages
+  );
 
-  const startIndex = (safePage - 1) * POSTS_PER_PAGE;
+  const startIndex =
+    (safePage - 1) * POSTS_PER_PAGE;
 
   const visiblePosts = filteredPosts.slice(
     startIndex,
@@ -325,7 +327,7 @@ export default function BlogLibrarySection() {
     searchQuery.trim().length > 0;
 
   /* ==========================================
-     HANDLERS
+     EVENTS
   ========================================== */
 
   const changeCategory = (category: string) => {
@@ -352,25 +354,17 @@ export default function BlogLibrarySection() {
 
     setCurrentPage(nextPage);
 
-    const heading = document.getElementById(
-      "blog-library-heading"
-    );
-
-    if (heading) {
-      const reducedMotion = window.matchMedia(
-        "(prefers-reduced-motion: reduce)"
-      ).matches;
-
-      heading.scrollIntoView({
-        behavior: reducedMotion ? "auto" : "smooth",
+    document
+      .getElementById("blog-library-heading")
+      ?.scrollIntoView({
+        behavior: window.matchMedia(
+          "(prefers-reduced-motion: reduce)"
+        ).matches
+          ? "auto"
+          : "smooth",
         block: "start",
       });
-    }
   };
-
-  /* ==========================================
-     RENDER
-  ========================================== */
 
   return (
     <section
@@ -388,6 +382,7 @@ export default function BlogLibrarySection() {
           px-5 sm:px-8 lg:px-10
         "
       >
+
         {/* =====================================
             HEADER AND SEARCH
         ===================================== */}
@@ -402,8 +397,8 @@ export default function BlogLibrarySection() {
           <div className="max-w-[670px]">
             <p
               className="
-                text-[12px] font-bold
-                uppercase tracking-[0.16em]
+                text-[11px] font-bold
+                uppercase tracking-[.16em]
                 text-[#A48645]
               "
             >
@@ -425,7 +420,7 @@ export default function BlogLibrarySection() {
             <p
               className="
                 mt-3 text-[16px]
-                leading-8 text-[#67786C]
+                leading-7 text-[#67786C]
               "
             >
               Practical perspectives on business,
@@ -434,9 +429,9 @@ export default function BlogLibrarySection() {
             </p>
           </div>
 
-          {/* SEARCH FIELD */}
+          {/* SEARCH */}
 
-          <div className="w-full md:max-w-[320px]">
+          <div className="w-full md:max-w-[310px]">
             <label
               htmlFor="blog-article-search"
               className="sr-only"
@@ -446,7 +441,7 @@ export default function BlogLibrarySection() {
 
             <div
               className="
-                flex h-12 items-center gap-3
+                flex h-11 items-center gap-3
                 rounded-xl border
                 border-[#DDE5DB]
                 bg-white px-4
@@ -456,7 +451,7 @@ export default function BlogLibrarySection() {
               "
             >
               <Search
-                size={19}
+                size={17}
                 className="shrink-0 text-[#849287]"
               />
 
@@ -471,7 +466,7 @@ export default function BlogLibrarySection() {
                 className="
                   min-w-0 flex-1
                   bg-transparent
-                  text-[15px] text-[#173C31]
+                  text-[13px] text-[#173C31]
                   outline-none
                   placeholder:text-[#96A298]
                 "
@@ -488,7 +483,7 @@ export default function BlogLibrarySection() {
                     hover:bg-[#F0F4EE]
                   "
                 >
-                  <X size={17} />
+                  <X size={15} />
                 </button>
               )}
             </div>
@@ -504,25 +499,27 @@ export default function BlogLibrarySection() {
             mt-7 flex flex-wrap
             items-center gap-2
           "
-          role="group"
           aria-label="Article category filters"
         >
           {categories.map((category) => {
-            const active = activeCategory === category;
+            const active =
+              activeCategory === category;
 
             return (
               <button
                 key={category}
                 type="button"
                 aria-pressed={active}
-                onClick={() => changeCategory(category)}
+                onClick={() =>
+                  changeCategory(category)
+                }
                 className={`
-                  min-h-[42px]
+                  min-h-[37px]
                   rounded-full border
-                  px-5 py-2.5
-                  text-[14px]
+                  px-4 py-2
+                  text-[12px]
                   font-semibold
-                  transition-all duration-200
+                  transition-colors
                   ${
                     active
                       ? `
@@ -535,7 +532,6 @@ export default function BlogLibrarySection() {
                         bg-white
                         text-[#53685A]
                         hover:border-[#0B5345]
-                        hover:bg-[#F4F8F3]
                         hover:text-[#0B5345]
                       `
                   }
@@ -561,7 +557,9 @@ export default function BlogLibrarySection() {
         >
           <p
             aria-live="polite"
-            className="text-[14px] text-[#738277]"
+            className="
+              text-[12px] text-[#738277]
+            "
           >
             Showing{" "}
             <strong className="text-[#173C31]">
@@ -587,20 +585,19 @@ export default function BlogLibrarySection() {
               onClick={resetFilters}
               className="
                 inline-flex items-center gap-2
-                text-[14px] font-semibold
+                text-[12px] font-semibold
                 text-[#0B6450]
-                transition-colors
                 hover:text-[#A48645]
               "
             >
-              <X size={16} />
+              <X size={14} />
               Clear filters
             </button>
           )}
         </div>
 
         {/* =====================================
-            BLOG ARTICLE GRID
+            ARTICLE GRID
         ===================================== */}
 
         {visiblePosts.length > 0 ? (
@@ -619,6 +616,10 @@ export default function BlogLibrarySection() {
             ))}
           </div>
         ) : (
+          /* =================================
+              EMPTY RESULTS
+          ================================= */
+
           <div
             className="
               mt-7 flex flex-col
@@ -630,14 +631,14 @@ export default function BlogLibrarySection() {
             "
           >
             <Search
-              size={30}
+              size={28}
               className="text-[#0B6450]"
             />
 
             <h3
               className="
                 mt-4 font-serif
-                text-[25px] text-[#173C31]
+                text-[23px] text-[#173C31]
               "
             >
               No articles found
@@ -646,13 +647,12 @@ export default function BlogLibrarySection() {
             <p
               className="
                 mt-2 max-w-sm
-                text-[16px]
-                leading-7
+                text-[13px] leading-6
                 text-[#728176]
               "
             >
-              Try another search keyword or
-              select a different category.
+              Try another search keyword
+              or select a different category.
             </p>
 
             <button
@@ -661,9 +661,8 @@ export default function BlogLibrarySection() {
               className="
                 mt-5 rounded-full
                 bg-[#0B5345]
-                px-6 py-3
-                text-[14px]
-                font-semibold
+                px-5 py-2.5
+                text-[12px] font-semibold
                 text-white
                 hover:bg-[#146D58]
               "
@@ -682,66 +681,63 @@ export default function BlogLibrarySection() {
             aria-label="Blog pagination"
             className="
               mt-9 flex flex-wrap
-              items-center justify-center gap-3
+              items-center justify-center
+              gap-3
             "
           >
-            {/* PREVIOUS PAGE */}
-
             <button
               type="button"
               aria-label="Previous page"
               disabled={safePage === 1}
-              onClick={() => changePage(safePage - 1)}
+              onClick={() =>
+                changePage(safePage - 1)
+              }
               className="
-                flex h-11 w-11
+                flex h-10 w-10
                 items-center justify-center
                 rounded-full border
                 border-[#DDE6DB]
                 bg-white text-[#0B5345]
-                transition-colors
                 disabled:cursor-not-allowed
                 disabled:opacity-40
                 hover:enabled:bg-[#F1F5EF]
               "
             >
-              <ChevronLeft size={20} />
+              <ChevronLeft size={18} />
             </button>
-
-            {/* PAGE NUMBER */}
 
             <span
               className="
-                min-w-[105px] text-center
-                text-[14px] font-semibold
+                text-[12px] font-semibold
                 text-[#53675A]
               "
             >
               Page {safePage} of {totalPages}
             </span>
 
-            {/* NEXT PAGE */}
-
             <button
               type="button"
               aria-label="Next page"
               disabled={safePage === totalPages}
-              onClick={() => changePage(safePage + 1)}
+              onClick={() =>
+                changePage(safePage + 1)
+              }
               className="
-                flex h-11 w-11
+                flex h-10 w-10
                 items-center justify-center
                 rounded-full border
                 border-[#DDE6DB]
                 bg-white text-[#0B5345]
-                transition-colors
                 disabled:cursor-not-allowed
                 disabled:opacity-40
                 hover:enabled:bg-[#F1F5EF]
               "
             >
-              <ChevronRight size={20} />
+              <ChevronRight size={18} />
             </button>
           </nav>
         )}
+
       </div>
     </section>
   );
